@@ -24,14 +24,20 @@ async function run(){
     // console.log(table_header)
     let headers = await page.getByRole('columnheader').allTextContents()
 
-    // let athletes = await page.locator('tbody tr td div').allInnerTexts();
-    let athletes = page.locator('tbody tr td div').evaluate(()=>{
+    let athletes = await page.locator('tbody tr td div').allInnerTexts();
+    // let athletes = await page.locator('tbody tr td div').evaluate(()=>{
+
+    // });
+    let athleteData = await page.locator('tbody tr').evaluate((el)=>{
+        let row = Array.from(el.querySelectorAll('td div'))
         
+        return row
     });
+    console.log(athleteData)
     //i could just split this every athlete or i could find a wait to chain the locators
     //so that I can easily group into separate sub arrays or objects to write easier
 
-    console.log(athletes)
+    // console.log(athletes)
     // console.log(headers)
     await browser.close();
 }
