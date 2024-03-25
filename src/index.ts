@@ -45,18 +45,22 @@ async function run(){
     let headers = await page.getByRole('columnheader').allTextContents()
 
     // let athletes = await page.locator('tbody tr td div').allInnerTexts();
-    let totalAthleteCount = await page.locator('tbody tr').count()
     // console.log(totalAthleteCount)
 
     
     //I think this is easier to work with
-    let athletes = await page.locator('tbody tr').allInnerTexts() 
+    let athleteLocator = page.locator('tbody tr')
+    let athletes = await athleteLocator.allInnerTexts() 
+    let totalAthleteCount = await athleteLocator.count() 
+    // let athletes = await page.locator('tbody tr').allInnerTexts() 
+    // let totalAthleteCount = await page.locator('tbody tr').count()
 
     let athleteData = [];
+
     for(let i=0; i< totalAthleteCount; i++){
         let currentAthlete = athletes[i].split(/\r?\n/).map(elem => elem.trim()).filter(elem => elem !== '');
         let athleteObj = athleteArrayToObj(currentAthlete);
-        // console.log(athleteObj)
+        console.log(athleteObj)
         athleteData.push(athleteObj)
     }
 
@@ -64,17 +68,6 @@ async function run(){
     //write objects to csv
 
 
-    // let athleteData = await page.locator('tbody tr').evaluate((el)=>{
-    //     let row = Array.from(el.querySelectorAll('td div'))
-        
-    //     return row
-    // });
-    // console.log(athleteData)
-    //i could just split this every athlete or i could find a wait to chain the locators
-    //so that I can easily group into separate sub arrays or objects to write easier
-
-    // console.log(athletes)
-    // console.log(headers)
     await browser.close();
 }
 
