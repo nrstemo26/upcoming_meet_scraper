@@ -2,11 +2,23 @@ import fs from 'fs'
 import { createObjectCsvWriter } from 'csv-writer';
 import playwright from 'playwright';
 
-function athleteArrayToObj(array:string[]){
-    let athleteObj = {}
+interface AthleteEntry{
+    member_id: number|string,
+    first_name: string,
+    last_name: string,
+    state: string,
+    birth_year: number|string,
+    club: string,
+    gender: string,
+    division: string,
+    weight_class: number|string,
+    entry_total: number|string
+  }
+
+function athleteArrayToObj(array:string[]): AthleteEntry{
     try{
         if(array.length ===11){
-            athleteObj = {
+            return {
                 member_id: array[0],
                 first_name: array[1],
                 last_name: array[2],
@@ -18,32 +30,39 @@ function athleteArrayToObj(array:string[]){
                 weight_class: array[9],
                 entry_total: array[10],
             }
-            return athleteObj;
         }else{
             throw new Error('unexpected length of array')
         }
     }catch(e){
         console.error(e);
-        return {};
+        return {
+            member_id: 'NA',
+            first_name: 'NA',
+            last_name: 'NA',
+            state: 'NA',
+            birth_year: 'NA',
+            club: 'NA',
+            gender: 'NA',
+            division: 'NA',
+            weight_class: 'NA',
+            entry_total: 'NA',
+        }
     }
 
     
 
     
 }
-async function writeResults(path:string, header, data){
+
+console.log('sdfs')
+
+async function writeResults(path:string, header:{id:string, title:string}[], data:AthleteEntry[]){
     const csvWriter = createObjectCsvWriter({
         path: path,
         header:header
     })
 
     await csvWriter.writeRecords(data)
-        // .then(()=>{
-        //     console.log('file written successfully')
-        // })
-        // .catch((e)=>{
-        //     console.error('error writing csv file: ', e)
-        // })
 }
 
 async function run(){
@@ -74,15 +93,16 @@ async function run(){
 
     for(let i=0; i< totalAthleteCount; i++){
         let currentAthlete = athletes[i].split(/\r?\n/).map(elem => elem.trim()).filter(elem => elem !== '');
-        let athleteObj = athleteArrayToObj(currentAthlete);
+        let athleteObj: AthleteEntry = athleteArrayToObj(currentAthlete);
         athleteData.push(athleteObj)
     }
     await browser.close();
     
+    console.log(athleteData[0])
     const csvHeader = Object.keys(athleteData[0]).map(el=>{
         return {id: el, title: el}
     })
-    console.log(csvHeader)
+    // console.log(csvHeader)
 
     await writeResults('./output.csv', csvHeader, athleteData)
    
