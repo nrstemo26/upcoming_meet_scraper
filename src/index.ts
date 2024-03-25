@@ -1,4 +1,5 @@
-import { error } from 'console';
+import fs from 'fs'
+import { createObjectCsvWriter } from 'csv-writer';
 import playwright from 'playwright';
 
 function athleteArrayToObj(array:string[]){
@@ -30,6 +31,20 @@ function athleteArrayToObj(array:string[]){
 
     
 }
+async function writeResults(path:string, header, data){
+    const csvWriter = createObjectCsvWriter({
+        path: path,
+        header:header
+    })
+
+    await csvWriter.writeRecords(data)
+        // .then(()=>{
+        //     console.log('file written successfully')
+        // })
+        // .catch((e)=>{
+        //     console.error('error writing csv file: ', e)
+        // })
+}
 
 async function run(){
     const browser = await playwright.chromium.launch({
@@ -60,15 +75,17 @@ async function run(){
     for(let i=0; i< totalAthleteCount; i++){
         let currentAthlete = athletes[i].split(/\r?\n/).map(elem => elem.trim()).filter(elem => elem !== '');
         let athleteObj = athleteArrayToObj(currentAthlete);
-        console.log(athleteObj)
         athleteData.push(athleteObj)
     }
-
-    //athleteData should be an array of objects 
-    //write objects to csv
-
-
     await browser.close();
+    
+    const csvHeader = Object.keys(athleteData[0]).map(el=>{
+        return {id: el, title: el}
+    })
+    console.log(csvHeader)
+
+    await writeResults('./output.csv', csvHeader, athleteData)
+   
 }
 
 
