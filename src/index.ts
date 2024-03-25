@@ -1,28 +1,34 @@
+import { error } from 'console';
 import playwright from 'playwright';
 
 function athleteArrayToObj(array:string[]){
     let athleteObj = {}
-    console.log(array.length);
-    if(array.length ===11){
-        // map headers to this array
-        //i could manually do it or i could
-        athleteObj = {
-            member_id: array[0],
-            first_name: array[1],
-            last_name: array[2],
-            state: array[3],
-            birth_year: array[4],
-            club: array[6],
-            gender: array[7],
-            division: array[8],
-            weight_class: array[9],
-            entry_total: array[10],
+    try{
+        if(array.length ===11){
+            athleteObj = {
+                member_id: array[0],
+                first_name: array[1],
+                last_name: array[2],
+                state: array[3],
+                birth_year: array[4],
+                club: array[6],
+                gender: array[7],
+                division: array[8],
+                weight_class: array[9],
+                entry_total: array[10],
+            }
+            return athleteObj;
+        }else{
+            throw new Error('unexpected length of array')
         }
-
-    }else{
-        console.log('unexpected length of athlete array');
+    }catch(e){
+        console.error(e);
+        return {};
     }
-    return athleteObj;
+
+    
+
+    
 }
 
 async function run(){
@@ -35,18 +41,7 @@ async function run(){
     await page.goto('https://usaweightlifting.sport80.com/public/events/12701/entries/19125?bl=locator');
     await page.waitForTimeout(5000) //wait 5sec.
     await page.waitForSelector('table')//wait for table to appear
-    // const table_header = await page.$eval('.v-data-table__wrapper table thead', headerEl => {
-    //     const data = [];
-    //     const headerEls = headerEl.innerHTML
-    //     // const listElms = headerElm.getElementsByTagName('li');
-
-    //     return headerEls;
-    // });
-    //.v-data-table.v-data-table--has-top theme-light
-    //.v-data-table__wrapper table thead to get the header
-    //.v-data-table__wrapper table tbody tr ....get info from there
-
-    // console.log(table_header)
+  
     let headers = await page.getByRole('columnheader').allTextContents()
 
     // let athletes = await page.locator('tbody tr td div').allInnerTexts();
@@ -61,14 +56,12 @@ async function run(){
     for(let i=0; i< totalAthleteCount; i++){
         let currentAthlete = athletes[i].split(/\r?\n/).map(elem => elem.trim()).filter(elem => elem !== '');
         let athleteObj = athleteArrayToObj(currentAthlete);
-        console.log(athleteObj)
+        // console.log(athleteObj)
         athleteData.push(athleteObj)
-        
     }
 
-    // let athletes = await page.locator('tbody tr td div').evaluate(()=>{
-
-    // });
+    //athleteData should be an array of objects 
+    //write objects to csv
 
 
     // let athleteData = await page.locator('tbody tr').evaluate((el)=>{
