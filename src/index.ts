@@ -16,9 +16,9 @@ interface AthleteEntry{
     meet_name: string,
   }
 
-function athleteArrayToObj(array:string[],date:Date): AthleteEntry{
+function athleteArrayToObj(array:string[], date:Date, title:string): AthleteEntry{
     try{
-        if(array.length ===11){
+        if(array.length === 11){
             return {
                 member_id: array[0],
                 first_name: array[1],
@@ -31,7 +31,7 @@ function athleteArrayToObj(array:string[],date:Date): AthleteEntry{
                 weight_class: array[9],
                 entry_total: array[10],
                 meet_date: date.toISOString().split('T')[0],
-                meet_name:'NA',
+                meet_name: title,
             }
         }else{
             throw new Error('unexpected length of array')
@@ -69,7 +69,6 @@ function formatAthleteData(data: string):string[]{
 }
 function formatMeetTitle(data:string):string{
     return data.replace(',', '').trim().replace(' - Members', '')
-    return 'f'
 }
 
 async function run(){
@@ -119,7 +118,7 @@ async function scrapeMeet(csvPath:string, url:string, date:Date){
 
     for(let i=0; i< totalAthleteCount; i++){
         let currentAthlete = formatAthleteData(athletes[i])
-        let athleteObj: AthleteEntry = athleteArrayToObj(currentAthlete, date);
+        let athleteObj: AthleteEntry = athleteArrayToObj(currentAthlete, date, meetTitle);
         athleteData.push(athleteObj)
     }
     await browser.close();
