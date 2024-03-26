@@ -11,10 +11,12 @@ interface AthleteEntry{
     gender: string,
     division: string,
     weight_class: number|string,
-    entry_total: number|string
+    entry_total: number|string,
+    meet_date: Date|string,
+    meet_name: string,
   }
 
-function athleteArrayToObj(array:string[]): AthleteEntry{
+function athleteArrayToObj(array:string[],date:Date): AthleteEntry{
     try{
         if(array.length ===11){
             return {
@@ -28,6 +30,8 @@ function athleteArrayToObj(array:string[]): AthleteEntry{
                 division: array[8],
                 weight_class: array[9],
                 entry_total: array[10],
+                meet_date: date.toISOString().split('T')[0],
+                meet_name:'NA',
             }
         }else{
             throw new Error('unexpected length of array')
@@ -45,6 +49,8 @@ function athleteArrayToObj(array:string[]): AthleteEntry{
             division: 'NA',
             weight_class: 'NA',
             entry_total: 'NA',
+            meet_date: 'NA',
+            meet_name:'NA',
         }
     }
 }
@@ -57,8 +63,13 @@ async function writeResults(path:string, header:{id:string, title:string}[], dat
     })
     await csvWriter.writeRecords(data)
 }
+
 function formatAthleteData(data: string):string[]{
     return data.replaceAll(',','').split(/\r?\n/).map(elem => elem.trim()).filter(elem => elem !== '');
+}
+function formatMeetTitle(data:string):string{
+    return data.replace(',', '').trim().replace(' - Members', '')
+    return 'f'
 }
 
 async function run(){
@@ -67,7 +78,8 @@ async function run(){
   let meetsArray = [
     {
         path: 'foo.csv',
-        url:'https://usaweightlifting.sport80.com/public/events/12701/entries/19125?bl=locator'
+        url:'https://usaweightlifting.sport80.com/public/events/12701/entries/19125?bl=locator',
+        date: new Date('June 23, 2023')
     },
     // {
     //     path: 'output2.csv',
@@ -75,13 +87,13 @@ async function run(){
     // },
 ] 
   for(let i=0; i< meetsArray.length; i++){
-      await scrapeMeet(meetsArray[i].path,meetsArray[i].url);
+      await scrapeMeet(meetsArray[i].path, meetsArray[i].url, meetsArray[i].date);
   }
 }
 
 
 // npx playwright codegen https://usaweightlifting.sport80.com/public/events/12701/entries/19125?bl=locator
-async function scrapeMeet(csvPath:string, url:string){
+async function scrapeMeet(csvPath:string, url:string, date:Date){
     const browser = await playwright.chromium.launch({
         headless: true,//setting to true will not run the ui
     })
@@ -89,43 +101,25 @@ async function scrapeMeet(csvPath:string, url:string){
     const page = await browser.newPage();
     await page.goto(url);
     await page.waitForSelector('table')//wait for table to appear
-  
+    
+    // let meetTitle = await page.getByRole('heading').filter().allTextContents();
+    let meetTitle = formatMeetTitle(await page.locator('.v-card__title').first().getByRole('heading').innerText());
+
+  ;
+    console.log(meetTitle)
+
     // let headers = await page.getByRole('columnheader').allTextContents()
  
     let athleteLocator = page.locator('tbody tr')
     let athletes = await athleteLocator.allInnerTexts() 
     let totalAthleteCount = await athleteLocator.count() 
 
-    athletes.push(`1234
-
-    Fren
-    
-    Fujepers
-    
-    Wisconsin
-    
-    1999
-    
-    43
-    
-    A1 ,Barbell Club
-    
-    Female
-    
-    Ope,n Women's
-    
-    53
-    
-    149
-    `)
 
     let athleteData: AthleteEntry[] = [];
 
-    for(let i=0; i< totalAthleteCount+1; i++){
-        // let currentAthlete = athletes[i].split(/\r?\n/).map(elem => elem.trim()).filter(elem => elem !== '');
+    for(let i=0; i< totalAthleteCount; i++){
         let currentAthlete = formatAthleteData(athletes[i])
-        // console.log(currentAthlete)
-        let athleteObj: AthleteEntry = athleteArrayToObj(currentAthlete);
+        let athleteObj: AthleteEntry = athleteArrayToObj(currentAthlete, date);
         athleteData.push(athleteObj)
     }
     await browser.close();
