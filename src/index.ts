@@ -59,13 +59,32 @@ async function writeResults(path:string, header:{id:string, title:string}[], dat
 }
 
 async function run(){
+  
+  //likely get these meets from somewhere else... via scraping or something
+  let meetsArray = [
+    {
+        path: 'foo.csv',
+        url:'https://usaweightlifting.sport80.com/public/events/12701/entries/19125?bl=locator'
+    },
+    // {
+    //     path: 'output2.csv',
+    //     url:'https://usaweightlifting.sport80.com/public/events/12701/entries/19125?bl=locator'
+    // },
+] 
+  for(let i=0; i< meetsArray.length; i++){
+      await scrapeMeet(meetsArray[i].path,meetsArray[i].url);
+  }
+}
+
+
+// npx playwright codegen https://usaweightlifting.sport80.com/public/events/12701/entries/19125?bl=locator
+async function scrapeMeet(csvPath:string, url:string){
     const browser = await playwright.chromium.launch({
         headless: true,//setting to true will not run the ui
     })
 
     const page = await browser.newPage();
-    await page.goto('https://usaweightlifting.sport80.com/public/events/12701/entries/19125?bl=locator');
-    // await page.waitForTimeout(5000) //wait 5sec.
+    await page.goto(url);
     await page.waitForSelector('table')//wait for table to appear
   
     // let headers = await page.getByRole('columnheader').allTextContents()
@@ -87,15 +106,8 @@ async function run(){
         return {'id': el, 'title': el}
     })
 
-
-    await writeResults('./output.csv', csvHeader, athleteData)
+    await writeResults(csvPath, csvHeader, athleteData)
    
-}
-
-
-// npx playwright codegen https://usaweightlifting.sport80.com/public/events/12701/entries/19125?bl=locator
-async function scrapeMeet(url:string){
-
 }
 
 run();
