@@ -57,6 +57,9 @@ async function writeResults(path:string, header:{id:string, title:string}[], dat
     })
     await csvWriter.writeRecords(data)
 }
+function formatAthleteData(data: string):string[]{
+    return data.replaceAll(',','').split(/\r?\n/).map(elem => elem.trim()).filter(elem => elem !== '');
+}
 
 async function run(){
   
@@ -93,10 +96,35 @@ async function scrapeMeet(csvPath:string, url:string){
     let athletes = await athleteLocator.allInnerTexts() 
     let totalAthleteCount = await athleteLocator.count() 
 
+    athletes.push(`1234
+
+    Fren
+    
+    Fujepers
+    
+    Wisconsin
+    
+    1999
+    
+    43
+    
+    A1 ,Barbell Club
+    
+    Female
+    
+    Ope,n Women's
+    
+    53
+    
+    149
+    `)
+
     let athleteData: AthleteEntry[] = [];
 
-    for(let i=0; i< totalAthleteCount; i++){
-        let currentAthlete = athletes[i].split(/\r?\n/).map(elem => elem.trim()).filter(elem => elem !== '');
+    for(let i=0; i< totalAthleteCount+1; i++){
+        // let currentAthlete = athletes[i].split(/\r?\n/).map(elem => elem.trim()).filter(elem => elem !== '');
+        let currentAthlete = formatAthleteData(athletes[i])
+        // console.log(currentAthlete)
         let athleteObj: AthleteEntry = athleteArrayToObj(currentAthlete);
         athleteData.push(athleteObj)
     }
