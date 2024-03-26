@@ -1,6 +1,12 @@
 import { createObjectCsvWriter } from 'csv-writer';
 import playwright from 'playwright';
 
+interface UpcomingMeet{
+    path: string,
+    url: string,
+    date: Date,
+}
+
 interface AthleteEntry{
     member_id: number|string,
     first_name: string,
@@ -14,7 +20,8 @@ interface AthleteEntry{
     entry_total: number|string,
     meet_date: Date|string,
     meet_name: string,
-  }
+}
+
 
 function athleteArrayToObj(array:string[], date:Date, title:string): AthleteEntry{
     try{
@@ -72,6 +79,7 @@ function formatMeetTitle(data:string):string{
 }
 
 async function run(){
+    await scrapeAllUpcoming();
   
   //likely get these meets from somewhere else... via scraping or something
   let meetsArray = [
@@ -85,9 +93,9 @@ async function run(){
     //     url:'https://usaweightlifting.sport80.com/public/events/12701/entries/19125?bl=locator'
     // },
 ] 
-  for(let i=0; i< meetsArray.length; i++){
-      await scrapeMeet(meetsArray[i].path, meetsArray[i].url, meetsArray[i].date);
-  }
+//   for(let i=0; i< meetsArray.length; i++){
+//       await scrapeMeet(meetsArray[i].path, meetsArray[i].url, meetsArray[i].date);
+//   }
 }
 
 
@@ -130,5 +138,35 @@ async function scrapeMeet(csvPath:string, url:string, date:Date){
     await writeResults(csvPath, csvHeader, athleteData)
    
 }
+
+async function scrapeAllUpcoming(): Promise<UpcomingMeet[]>{
+    const browser = await playwright.chromium.launch({
+        headless: false,//setting to true will not run the ui
+    })
+
+    const page = await browser.newPage();
+    await page.goto('https://usaweightlifting.sport80.com/public/events');
+
+    //filters to only show upcoming meets
+    await page.getByLabel('Show Filters').click();
+    await page.locator('div:nth-child(4) > .s80-autocomplete > div:nth-child(2) > .v-input__control > .v-input__slot > .v-select__slot > div:nth-child(4) > .v-input__icon > .v-icon').click();
+    await page.getByText('Meets', { exact: true }).click();
+    await page.getByRole('button', { name: 'Apply' }).click();
+    // wait for the filter button to pop up
+    // filter by just meets
+    // wait for that to reload
+    //while were not at the last page of the pagination
+        //click each down arrow and look if its a national meet
+        //if it is we do store info in array
+        //if we get to the last element on a page we click the next page button
+
+
+    return [{
+        path: 'foo.csv',
+        url:'https://usaweightlifting.sport80.com/public/events/12701/entries/19125?bl=locator',
+        date: new Date('June 23, 2023')
+    }]
+}
+
 
 run();
