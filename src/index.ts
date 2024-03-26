@@ -152,15 +152,34 @@ async function scrapeAllUpcoming(): Promise<UpcomingMeet[]>{
     await page.locator('div:nth-child(4) > .s80-autocomplete > div:nth-child(2) > .v-input__control > .v-input__slot > .v-select__slot > div:nth-child(4) > .v-input__icon > .v-icon').click();
     await page.getByText('Meets', { exact: true }).click();
     await page.getByRole('button', { name: 'Apply' }).click();
-    // wait for the filter button to pop up
-    // filter by just meets
-    // wait for that to reload
-    //while were not at the last page of the pagination
-        //click each down arrow and look if its a national meet
-        //if it is we do store info in array
-        //if we get to the last element on a page we click the next page button
+
+    //could wait for a selector but well just do this for now
+    await page.waitForTimeout(3000);
+
+    let done = false;
+    while(!done){
+        //scrape all meet pages
+        //wait for reload
+        await page.waitForTimeout(2000)
+
+        if(await page.getByLabel('Next page').isDisabled()){
+            done = true;
+        }else{
+            await page.getByLabel('Next page').click();
+        }
+    }
+
+    
+    //get 
+
+    // while were not at the last page of the pagination
+        // click each down arrow and look if its a national meet
+        // if it is we do store info in array
+        // if we get to the last element on a page we click the next page button
 
 
+
+    browser.close()
     return [{
         path: 'foo.csv',
         url:'https://usaweightlifting.sport80.com/public/events/12701/entries/19125?bl=locator',
