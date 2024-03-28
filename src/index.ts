@@ -82,34 +82,29 @@ function formatMeetTitle(data:string):string{
 }
 
 async function run(){
-    let meetsArray = await scrapeAllUpcoming();
-    let header = [
-        {id:'path',title:'path'},
-        {id:'name', title:'name'},
-        {id:'date', title:'date'},
-        {id:'url', title:'url'},
-]
-    await writeResults('./national_meets_meta.csv',header,meetsArray);
+    //declare meets array up here
 
+    //if there is the file path ./data/national_meets_meta.csv
+    //skip this step
+        let meetsArray = await scrapeAllUpcoming();
+       
+        let meetsHeader = Object.keys(meetsArray[0]).map(el=>{
+            return {id: el, title: el}
+        })
 
-  
-//   //likely get these meets from somewhere else... via scraping or something
-//   let meetsArray = [
-//     {
-//         path: 'foo.csv',
-//         url:'https://usaweightlifting.sport80.com/public/events/12701/entries/19125?bl=locator',
-//         date: new Date('June 23, 2023')
-//     },
-//     // {
-//     //     path: 'output2.csv',
-//     //     url:'https://usaweightlifting.sport80.com/public/events/12701/entries/19125?bl=locator'
-//     // },
-// ] 
+        await writeResults('./data/national_meets_meta.csv', meetsHeader, meetsArray);
+    //all the way to here
+    //else
+        //make an array from reading the csv that exists
+        // read the csv
+    //end else
+    
+    // we should have an array and can rea
+    //
 
-
-//   for(let i=0; i< meetsArray.length; i++){
-//       await scrapeMeet(meetsArray[i].path, meetsArray[i].url, meetsArray[i].date);
-//   }
+  for(let i=0; i< meetsArray.length; i++){
+      await scrapeMeet(meetsArray[i].path, meetsArray[i].url, meetsArray[i].date);
+  }
 }
 
 
@@ -124,6 +119,7 @@ async function scrapeMeet(csvPath:string, url:string, date:Date){
     await page.waitForSelector('table')//wait for table to appear
     
     // let meetTitle = await page.getByRole('heading').filter().allTextContents();
+
     let meetTitle = formatMeetTitle(await page.locator('.v-card__title').first().getByRole('heading').innerText());
 
   ;
@@ -184,7 +180,7 @@ function cleanDate(str:string|null): Date{
 function createPath(str:string|null):string{
     if(str){
         let processedString = str.trim().replace(/[-,]/g, '').toLowerCase();
-        return './' + processedString.replace(/\s+/g, '_') + '.csv'
+        return './data/' + processedString.replace(/\s+/g, '_') + '.csv'
     }
     return 'foo.csv'
 }
@@ -256,3 +252,20 @@ async function scrapeAllUpcoming(): Promise<UpcomingMeet[]>{
 
 
 run();
+
+
+
+
+
+//   //likely get these meets from somewhere else... via scraping or something
+//   let meetsArray = [
+//     {
+//         path: 'foo.csv',
+//         url:'https://usaweightlifting.sport80.com/public/events/12701/entries/19125?bl=locator',
+//         date: new Date('June 23, 2023')
+//     },
+//     // {
+//     //     path: 'output2.csv',
+//     //     url:'https://usaweightlifting.sport80.com/public/events/12701/entries/19125?bl=locator'
+//     // },
+// ] 
