@@ -149,15 +149,27 @@ function cleanMeetType(str:string): string{
     if(str.includes('Local')){
         return 'local'
     }
-    if(str.includes('National') || str.includes('American Open')){
+    else if(str.includes('National') || str.includes('American Open')){
         return 'national'
+    }else{
+        return 'weird'
     }
     return str
 
 }
 
+function cleanDate(str:string|null): Date{
+    if(str){
+        let date = str.split('-')[1]
+        return new Date(date)
+    }else{
+        console.log('got null to clean the date up')
+        return new Date();
+    }
+}
+
 async function scrapeAllUpcoming(): Promise<UpcomingMeet[]>{
-    let nationalMeets:{name:string|null, url:string}[] = [];
+    let nationalMeets:{name:string|null, url:string, date:Date}[] = [];
     const browser = await playwright.chromium.launch({
         headless: true,//setting to true will not run the ui
         // headless: false,//setting to true will not run the ui
@@ -189,6 +201,10 @@ async function scrapeAllUpcoming(): Promise<UpcomingMeet[]>{
             let cleanedMeetType = cleanMeetType(meetType)
     
             if(cleanedMeetType === 'national'){
+                //get date of the meet
+                let date = cleanDate(await meetPanel.locator('span.grey--text').textContent());
+                console.log(date)
+
                 const page1Promise = page.waitForEvent('popup');
                 await meetPanel.getByText('ENTRY LIST').click();
                 const page1 = await page1Promise;
@@ -202,6 +218,7 @@ async function scrapeAllUpcoming(): Promise<UpcomingMeet[]>{
                 nationalMeets.push({
                     url,
                     name,
+                    date
                 })
                
             }      
@@ -217,8 +234,7 @@ async function scrapeAllUpcoming(): Promise<UpcomingMeet[]>{
     
    
     console.log(allMeetTypes);
-    //get total count for the page
-    // console.log(await page.locator('div.v-expansion-panel').count())
+    
    
 
     // while were not at the last page of the pagination
