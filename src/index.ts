@@ -141,7 +141,7 @@ async function scrapeMeet(csvPath:string, url:string, date:Date){
 
 async function scrapeAllUpcoming(): Promise<UpcomingMeet[]>{
     const browser = await playwright.chromium.launch({
-        headless: false,//setting to true will not run the ui
+        headless: true,//setting to true will not run the ui
     })
 
     const page = await browser.newPage();
@@ -154,21 +154,43 @@ async function scrapeAllUpcoming(): Promise<UpcomingMeet[]>{
     await page.getByRole('button', { name: 'Apply' }).click();
 
     //could wait for a selector but well just do this for now
-    await page.waitForTimeout(3000);
+    await page.waitForTimeout(5000);
 
-    let done = false;
-    while(!done){
-        //scrape all meet pages
-        //wait for reload
-        await page.waitForTimeout(2000)
+    // let done = false;
+    // while(!done){
+    //     //scrape all meet pages
+    //     //wait for reload
+    //     await page.waitForTimeout(2000)
 
-        if(await page.getByLabel('Next page').isDisabled()){
-            done = true;
-        }else{
-            await page.getByLabel('Next page').click();
-        }
+    //     if(await page.getByLabel('Next page').isDisabled()){
+    //         done = true;
+    //     }else{
+    //         await page.getByLabel('Next page').click();
+    //     }
+    // }
+    let meetsOnPage = await page.locator('div.v-expansion-panel').count();
+    for(let i=0; i< meetsOnPage; i++){
+        let meetPanel = page.locator('div.v-expansion-panel').nth(i)
+        await meetPanel.click();
+        //now find the meet type for this panel
+        // let meetType = await meetPanel.locator('s80-data-item').nth(2).allTextContents()
+        let meetType = (await meetPanel.locator('.s80-data-item').nth(2).allInnerTexts())[0];
+        let cleanedMeetType = meetType.trim()
+        console.log('inner text')
+        console.log(meetType)
+        // await page.locator('div.v-expansion-panel').nth(i).click()
+
+        // now we need to check the meet type
+        // await page.locator('.v-expansion-panel-content ')
+        
+        // await page.getByText('Meet Type').highlight()
+        //this actually doesn't do anything^^
+        
     }
-
+    //get total count for the page
+    // console.log(await page.locator('div.v-expansion-panel').count())
+    //so i need to get the text that's next to ^
+    //aria-expanded='false' || 'true
     
     //get 
 
@@ -179,7 +201,7 @@ async function scrapeAllUpcoming(): Promise<UpcomingMeet[]>{
 
 
 
-    browser.close()
+    // browser.close()
     return [{
         path: 'foo.csv',
         url:'https://usaweightlifting.sport80.com/public/events/12701/entries/19125?bl=locator',
