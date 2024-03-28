@@ -6,6 +6,7 @@ let allMeetTypes:string[] = [];
 interface UpcomingMeet{
     path: string,
     url: string,
+    name: string,
     date: Date,
 }
 
@@ -65,7 +66,7 @@ function athleteArrayToObj(array:string[], date:Date, title:string): AthleteEntr
 }
 
 
-async function writeResults(path:string, header:{id:string, title:string}[], data:AthleteEntry[]){
+async function writeResults(path:string, header:{id:string, title:string}[], data:AthleteEntry[]|UpcomingMeet[]){
     const csvWriter = createObjectCsvWriter({
         path: path,
         header:header
@@ -81,20 +82,31 @@ function formatMeetTitle(data:string):string{
 }
 
 async function run(){
-    await scrapeAllUpcoming();
+    let meetsArray = await scrapeAllUpcoming();
+    let header = [
+        {id:'path',title:'path'},
+        {id:'name', title:'name'},
+        {id:'date', title:'date'},
+        {id:'url', title:'url'},
+]
+    await writeResults('national_meets_meta.csv',header,meetsArray);
+
+
   
-  //likely get these meets from somewhere else... via scraping or something
-  let meetsArray = [
-    {
-        path: 'foo.csv',
-        url:'https://usaweightlifting.sport80.com/public/events/12701/entries/19125?bl=locator',
-        date: new Date('June 23, 2023')
-    },
-    // {
-    //     path: 'output2.csv',
-    //     url:'https://usaweightlifting.sport80.com/public/events/12701/entries/19125?bl=locator'
-    // },
-] 
+//   //likely get these meets from somewhere else... via scraping or something
+//   let meetsArray = [
+//     {
+//         path: 'foo.csv',
+//         url:'https://usaweightlifting.sport80.com/public/events/12701/entries/19125?bl=locator',
+//         date: new Date('June 23, 2023')
+//     },
+//     // {
+//     //     path: 'output2.csv',
+//     //     url:'https://usaweightlifting.sport80.com/public/events/12701/entries/19125?bl=locator'
+//     // },
+// ] 
+
+
 //   for(let i=0; i< meetsArray.length; i++){
 //       await scrapeMeet(meetsArray[i].path, meetsArray[i].url, meetsArray[i].date);
 //   }
@@ -141,20 +153,22 @@ async function scrapeMeet(csvPath:string, url:string, date:Date){
    
 }
 
-function cleanMeetType(str:string): string{
-    str = str.trim();
-    if(!allMeetTypes.includes(str)){
-        allMeetTypes.push(str)
+function cleanMeetType(str:string|null): string{
+    if(str){
+        str = str.trim();
+        if(!allMeetTypes.includes(str)){
+            allMeetTypes.push(str)
+        }
+        if(str.includes('Local')){
+            return 'local'
+        }
+        else if(str.includes('National') || str.includes('American Open')){
+            return 'national'
+        }else{
+            return 'weird'
+        }
     }
-    if(str.includes('Local')){
-        return 'local'
-    }
-    else if(str.includes('National') || str.includes('American Open')){
-        return 'national'
-    }else{
-        return 'weird'
-    }
-    return str
+    return 'weird'
 
 }
 
@@ -167,9 +181,17 @@ function cleanDate(str:string|null): Date{
         return new Date();
     }
 }
+function createPath(str:string|null):string{
+    if(str){
+        let processedString = str.trim().replace(/[-,]/g, '').toLowerCase();
+        return processedString.replace(/\s+/g, '_') + '.csv'
+    }
+    return 'foo.csv'
+}
+
 
 async function scrapeAllUpcoming(): Promise<UpcomingMeet[]>{
-    let nationalMeets:{name:string|null, url:string, date:Date}[] = [];
+    let nationalMeets:UpcomingMeet[] = [];
     const browser = await playwright.chromium.launch({
         headless: true,//setting to true will not run the ui
         // headless: false,//setting to true will not run the ui
@@ -196,14 +218,10 @@ async function scrapeAllUpcoming(): Promise<UpcomingMeet[]>{
         for(let i=0; i< meetsOnPage; i++){
             let meetPanel = page.locator('div.v-expansion-panel').nth(i)
             await meetPanel.click();
-            let meetType = (await meetPanel.locator('.s80-data-item').nth(2).allInnerTexts())[0];
+            let meetType = cleanMeetType((await meetPanel.locator('.s80-data-item').nth(2).allInnerTexts())[0]);
     
-            let cleanedMeetType = cleanMeetType(meetType)
-    
-            if(cleanedMeetType === 'national'){
-                //get date of the meet
+            if(meetType === 'national'){
                 let date = cleanDate(await meetPanel.locator('span.grey--text').textContent());
-                console.log(date)
 
                 const page1Promise = page.waitForEvent('popup');
                 await meetPanel.getByText('ENTRY LIST').click();
@@ -211,14 +229,12 @@ async function scrapeAllUpcoming(): Promise<UpcomingMeet[]>{
                 await page1.waitForSelector('.v-card__title')
                 
                 let name = await page1.locator('.v-card__title h2').textContent();
-                let url = page1.url()
-                console.log('url: ', url)
-                console.log('meet name: ', name)
                 
                 nationalMeets.push({
-                    url,
-                    name,
-                    date
+                    url: page1.url(),
+                    name: name? name: 'error',
+                    date,
+                    path: createPath(name)
                 })
                
             }      
@@ -231,27 +247,11 @@ async function scrapeAllUpcoming(): Promise<UpcomingMeet[]>{
         }
     }
    
-    
-   
     console.log(allMeetTypes);
-    
-   
-
-    // while were not at the last page of the pagination
-        // click each down arrow and look if its a national meet
-        // if it is we do store info in array
-        // if we get to the last element on a page we click the next page button
-
-
-
-        // s80-expansion-panel
+    console.log(nationalMeets);
       
-    // browser.close()
-    return [{
-        path: 'foo.csv',
-        url:'https://usaweightlifting.sport80.com/public/events/12701/entries/19125?bl=locator',
-        date: new Date('June 23, 2023')
-    }]
+    await browser.close()
+    return nationalMeets;
 }
 
 
