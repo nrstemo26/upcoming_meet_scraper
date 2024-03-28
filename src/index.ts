@@ -1,6 +1,8 @@
 import { createObjectCsvWriter } from 'csv-writer';
 import playwright from 'playwright';
 
+let allMeetTypes:string[] = [];
+
 interface UpcomingMeet{
     path: string,
     url: string,
@@ -139,9 +141,26 @@ async function scrapeMeet(csvPath:string, url:string, date:Date){
    
 }
 
+function cleanMeetType(str:string): string{
+    str = str.trim();
+    if(!allMeetTypes.includes(str)){
+        allMeetTypes.push(str)
+    }
+    if(str.includes('Local')){
+        return 'local'
+    }
+    if(str.includes('National') || str.includes('American Open')){
+        return 'national'
+    }
+    return str
+
+}
+
 async function scrapeAllUpcoming(): Promise<UpcomingMeet[]>{
+    let nationalMeets:{name:string|null, url:string}[] = [];
     const browser = await playwright.chromium.launch({
         headless: true,//setting to true will not run the ui
+        // headless: false,//setting to true will not run the ui
     })
 
     const page = await browser.newPage();
@@ -154,45 +173,53 @@ async function scrapeAllUpcoming(): Promise<UpcomingMeet[]>{
     await page.getByRole('button', { name: 'Apply' }).click();
 
     //could wait for a selector but well just do this for now
-    await page.waitForTimeout(5000);
+    await page.waitForSelector('div.v-expansion-panel');
 
-    // let done = false;
-    // while(!done){
-    //     //scrape all meet pages
-    //     //wait for reload
-    //     await page.waitForTimeout(2000)
+    let done = false;
+    while(!done){
+        console.log('looping');        
+        await page.waitForSelector('div.v-expansion-panel')
 
-    //     if(await page.getByLabel('Next page').isDisabled()){
-    //         done = true;
-    //     }else{
-    //         await page.getByLabel('Next page').click();
-    //     }
-    // }
-    let meetsOnPage = await page.locator('div.v-expansion-panel').count();
-    for(let i=0; i< meetsOnPage; i++){
-        let meetPanel = page.locator('div.v-expansion-panel').nth(i)
-        await meetPanel.click();
-        //now find the meet type for this panel
-        // let meetType = await meetPanel.locator('s80-data-item').nth(2).allTextContents()
-        let meetType = (await meetPanel.locator('.s80-data-item').nth(2).allInnerTexts())[0];
-        let cleanedMeetType = meetType.trim()
-        console.log('inner text')
-        console.log(meetType)
-        // await page.locator('div.v-expansion-panel').nth(i).click()
+        let meetsOnPage = await page.locator('div.v-expansion-panel').count();
+        for(let i=0; i< meetsOnPage; i++){
+            let meetPanel = page.locator('div.v-expansion-panel').nth(i)
+            await meetPanel.click();
+            let meetType = (await meetPanel.locator('.s80-data-item').nth(2).allInnerTexts())[0];
+    
+            let cleanedMeetType = cleanMeetType(meetType)
+    
+            if(cleanedMeetType === 'national'){
+                const page1Promise = page.waitForEvent('popup');
+                await meetPanel.getByText('ENTRY LIST').click();
+                const page1 = await page1Promise;
+                await page1.waitForSelector('.v-card__title')
+                
+                let name = await page1.locator('.v-card__title h2').textContent();
+                let url = page1.url()
+                console.log('url: ', url)
+                console.log('meet name: ', name)
+                
+                nationalMeets.push({
+                    url,
+                    name,
+                })
+               
+            }      
+        }
 
-        // now we need to check the meet type
-        // await page.locator('.v-expansion-panel-content ')
-        
-        // await page.getByText('Meet Type').highlight()
-        //this actually doesn't do anything^^
-        
+        if(await page.getByLabel('Next page').isDisabled()){
+            done = true;
+        }else{
+            await page.getByLabel('Next page').click();
+        }
     }
+   
+    
+   
+    console.log(allMeetTypes);
     //get total count for the page
     // console.log(await page.locator('div.v-expansion-panel').count())
-    //so i need to get the text that's next to ^
-    //aria-expanded='false' || 'true
-    
-    //get 
+   
 
     // while were not at the last page of the pagination
         // click each down arrow and look if its a national meet
@@ -201,6 +228,8 @@ async function scrapeAllUpcoming(): Promise<UpcomingMeet[]>{
 
 
 
+        // s80-expansion-panel
+      
     // browser.close()
     return [{
         path: 'foo.csv',
