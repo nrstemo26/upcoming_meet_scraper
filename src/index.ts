@@ -89,7 +89,7 @@ async function run(){
         {id:'date', title:'date'},
         {id:'url', title:'url'},
 ]
-    await writeResults('national_meets_meta.csv',header,meetsArray);
+    await writeResults('./national_meets_meta.csv',header,meetsArray);
 
 
   
@@ -184,7 +184,7 @@ function cleanDate(str:string|null): Date{
 function createPath(str:string|null):string{
     if(str){
         let processedString = str.trim().replace(/[-,]/g, '').toLowerCase();
-        return processedString.replace(/\s+/g, '_') + '.csv'
+        return './' + processedString.replace(/\s+/g, '_') + '.csv'
     }
     return 'foo.csv'
 }
