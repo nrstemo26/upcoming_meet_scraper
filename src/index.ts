@@ -1,6 +1,8 @@
 import { createObjectCsvWriter } from 'csv-writer';
 import playwright from 'playwright';
 import fs from 'fs';
+import csv from 'csv-parser';
+import { promisify } from 'util';
 
 let allMeetTypes:string[] = [];
 
@@ -81,28 +83,30 @@ function formatAthleteData(data: string):string[]{
 function formatMeetTitle(data:string):string{
     return data.replace(',', '').trim().replace(' - Members', '')
 }
-async function readFile(filePath:string):Promise<UpcomingMeet[]> {
-    return new Promise((resolve, reject) => {
-        const readStream = fs.createReadStream(filePath, { encoding: 'utf8' });
+async function readCsv(filePath:string):Promise<UpcomingMeet[]> {
+    const readFileAsync = promisify(fs.readFile);
 
-        let data:UpcomingMeet[] = [];
+    try {
+        // Read the CSV file as a stream
+        const stream = fs.createReadStream(filePath)
+            .pipe(csv());
 
-        readStream.on('data', (chunk) => {
-            // do something with the string
-            console.log('new line')
-            console.log(chunk)
-            data.push(chunk);
-        });
+        const data = [];
 
-        readStream.on('error', (err) => {
-            reject(err);
-        });
+        // Wait for 'data' event to collect each row
+        for await (const row of stream) {
+            data.push(row);
+        }
 
-        readStream.on('end', () => {
-            resolve(data);
-        });
-    });
+        return data;
+    } catch (error:any) {
+        throw new Error(error);
+    }
 }
+
+
+//   
+
 
 
 async function run(){
@@ -124,13 +128,8 @@ async function run(){
             await writeResults('./data/national_meets_meta.csv', meetsHeader, meetsArray);
         } else {
             // File exists
-            meetsArray = await readFile('./data/national_meets_meta.csv')
-            // console.log(meetsArray);
-             
-
-            
-            
-            return false;
+            meetsArray = await readCsv('./data/national_meets_meta.csv')
+            console.log(meetsArray);
             
         }
     });
