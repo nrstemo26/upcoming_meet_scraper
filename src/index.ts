@@ -1,5 +1,6 @@
 import { createObjectCsvWriter } from 'csv-writer';
 import playwright from 'playwright';
+import fs from 'fs';
 
 let allMeetTypes:string[] = [];
 
@@ -80,31 +81,65 @@ function formatAthleteData(data: string):string[]{
 function formatMeetTitle(data:string):string{
     return data.replace(',', '').trim().replace(' - Members', '')
 }
+async function readFile(filePath:string):Promise<UpcomingMeet[]> {
+    return new Promise((resolve, reject) => {
+        const readStream = fs.createReadStream(filePath, { encoding: 'utf8' });
+
+        let data:UpcomingMeet[] = [];
+
+        readStream.on('data', (chunk) => {
+            // do something with the string
+            console.log('new line')
+            console.log(chunk)
+            data.push(chunk);
+        });
+
+        readStream.on('error', (err) => {
+            reject(err);
+        });
+
+        readStream.on('end', () => {
+            resolve(data);
+        });
+    });
+}
+
 
 async function run(){
     //declare meets array up here
 
+    let meetsArray:UpcomingMeet[] = [];
+
     //if there is the file path ./data/national_meets_meta.csv
     //skip this step
-        let meetsArray = await scrapeAllUpcoming();
+    fs.access('./data/national_meets_meta.csv', fs.constants.F_OK, async (err) => {
+        if (err) {
+            // File doesn't exist
+            meetsArray = await scrapeAllUpcoming();
        
-        let meetsHeader = Object.keys(meetsArray[0]).map(el=>{
-            return {id: el, title: el}
-        })
-
-        await writeResults('./data/national_meets_meta.csv', meetsHeader, meetsArray);
-    //all the way to here
-    //else
-        //make an array from reading the csv that exists
-        // read the csv
-    //end else
+            let meetsHeader = Object.keys(meetsArray[0]).map(el=>{
+                return {id: el, title: el}
+            })
     
-    // we should have an array and can rea
-    //
+            await writeResults('./data/national_meets_meta.csv', meetsHeader, meetsArray);
+        } else {
+            // File exists
+            meetsArray = await readFile('./data/national_meets_meta.csv')
+            // console.log(meetsArray);
+             
 
-  for(let i=0; i< meetsArray.length; i++){
-      await scrapeMeet(meetsArray[i].path, meetsArray[i].url, meetsArray[i].date);
-  }
+            
+            
+            return false;
+            
+        }
+    });
+
+    for(let i=0; i< meetsArray.length; i++){
+        await scrapeMeet(meetsArray[i].path, meetsArray[i].url, meetsArray[i].date);
+    }
+
+
 }
 
 
