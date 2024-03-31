@@ -138,6 +138,7 @@ async function run(){
         await scrapeMeet(meetsArray[i].path, meetsArray[i].url, meetsArray[i].date);
     }
 
+    return true;
 
 }
 
@@ -284,8 +285,33 @@ async function scrapeAllUpcoming(): Promise<UpcomingMeet[]>{
     return nationalMeets;
 }
 
+function retry(maxRetries: number, tryFn:any) { 
+    let retries:number = 0;
+    while(retries < maxRetries){
+        try{
+            let done = tryFn();
+            if(done) break;
+        }catch(e){
+            console.log('there was an error. now retrying')
+            retries++
+        }
+    }
+    if(retries === maxRetries){
+        console.log('exceeded max retries')
+    }else{
+        console.log('successful with retries');
+    }
+}   
 
-run();
+function foo(){
+    // return true;
+    throw new Error('error')
+}
+retry(5,foo);
+
+
+// run();
+
 
 
 
