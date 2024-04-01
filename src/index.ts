@@ -134,40 +134,30 @@ async function fileExists(path:string): Promise<Boolean>{
 
 
 
-async function run(){
-    //declare meets array up here
-
+async function scrapeMetaAndSpecific(){
     let meetsArray:UpcomingMeet[] = [];
 
-    //if there is the file path ./data/national_meets_meta.csv
-    //skip this step
-    //what if it exists but is empty
     //what are the ways this could fail
     //error while scraping upcoming on retry it would have the file exists
-    fs.access('./data/national_meets_meta.csv', fs.constants.F_OK, async (err) => {
-        if (err) {
-            // File doesn't exist
-            try{
+    let meetMetaPath:string = './data/national_meets_meta.csv'; 
 
-                meetsArray = await scrapeAllUpcoming();
-           
-                let meetsHeader = Object.keys(meetsArray[0]).map(el=>{
-                    return {id: el, title: el}
-                })
-        
-                await writeResults('./data/national_meets_meta.csv', meetsHeader, meetsArray);
-
-            }catch(e){
-                //error while getting data or writing
-                await deleteFile('./data/national_meets_meta.csv')
-            }
-        } else {
-            // File exists
-            meetsArray = await readCsv('./data/national_meets_meta.csv')
-            console.log(meetsArray);
-            
+    if(await fileExists(meetMetaPath)){
+        meetsArray = await readCsv('./data/national_meets_meta.csv')
+        console.log(meetsArray);
+    }else{
+        try{
+            meetsArray = await scrapeAllUpcoming();
+    
+            let meetsHeader = Object.keys(meetsArray[0]).map(el=>{
+                return {id: el, title: el}
+            })
+    
+            await writeResults('./data/national_meets_meta.csv', meetsHeader, meetsArray);
+        }catch(e){
+            //error while getting data or writing
+            await deleteFile('./data/national_meets_meta.csv')
         }
-    });
+    }    
 
     for(let i = 0; i< meetsArray.length; i++){
         let {path, date, url} = meetsArray[i];
@@ -177,13 +167,17 @@ async function run(){
                 await scrapeMeet(path, url, date);
             }catch(e){
                 await deleteFile(path)
-                
+
             }
         }
     }
 
     return true;
 
+}
+
+async function run(){
+    await retry(5,scrapeMetaAndSpecific);
 }
 
 
@@ -331,11 +325,11 @@ async function scrapeAllUpcoming(): Promise<UpcomingMeet[]>{
 }
 
 
-function retry(maxRetries: number, tryFn:any) { 
+async function retry(maxRetries: number, tryFn:any) { 
     let retries:number = 0;
     while(retries < maxRetries){
         try{
-            let done = tryFn();
+            let done = await tryFn();
             if(done) break;
         }catch(e){
             console.log('there was an error. now retrying')
@@ -370,3 +364,28 @@ function retry(maxRetries: number, tryFn:any) {
 //     //     url:'https://usaweightlifting.sport80.com/public/events/12701/entries/19125?bl=locator'
 //     // },
 // ] 
+
+
+// fs.access('./data/national_meets_meta.csv', fs.constants.F_OK, async (err) => {
+// if (err) {
+//     // File doesn't exist
+//     try{
+
+//         meetsArray = await scrapeAllUpcoming();
+   
+//         let meetsHeader = Object.keys(meetsArray[0]).map(el=>{
+//             return {id: el, title: el}
+//         })
+
+//         await writeResults('./data/national_meets_meta.csv', meetsHeader, meetsArray);
+
+//     }catch(e){
+//         //error while getting data or writing
+//         await deleteFile('./data/national_meets_meta.csv')
+//     }
+// } else {
+//     // File exists
+//     meetsArray = await readCsv('./data/national_meets_meta.csv')
+//     console.log(meetsArray);
+    
+// }
