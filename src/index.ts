@@ -30,9 +30,6 @@ interface AthleteEntry{
 
 
 function athleteArrayToObj(array:string[], date:Date, title:string): AthleteEntry{
-    console.log(array)
-    console.log(date)
-    console.log(title)
     try{
         if(array.length === 11){
             return {
@@ -214,7 +211,7 @@ async function scrapeMeet(csvPath:string, url:string, date:Date){
     let athleteData: AthleteEntry[] = [];
 
     if(athletes[0] === 'No Member Entries'){
-        console.log('no entries')
+        console.log('done scraping... no entries')
         return;
     }else{
         for(let i=0; i< totalAthleteCount; i++){
@@ -236,6 +233,7 @@ async function scrapeMeet(csvPath:string, url:string, date:Date){
     }
 
     console.log('done scraping')
+    
 }
 
 function cleanMeetType(str:string|null): string{
@@ -256,6 +254,8 @@ function cleanMeetType(str:string|null): string{
     return 'weird'
 
 }
+
+
 
 function cleanDate(str:string|null): Date{
     if(str){
@@ -297,8 +297,10 @@ async function scrapeAllUpcoming(): Promise<UpcomingMeet[]>{
     await page.waitForSelector('div.v-expansion-panel');
 
     let done = false;
+    let pageNumber = 0;
     while(!done){
-        console.log('looping');        
+        pageNumber++
+        console.log('looping page: ', pageNumber);        
         await page.waitForSelector('div.v-expansion-panel')
 
         let meetsOnPage = await page.locator('div.v-expansion-panel').count();
@@ -333,9 +335,6 @@ async function scrapeAllUpcoming(): Promise<UpcomingMeet[]>{
             await page.getByLabel('Next page').click();
         }
     }
-   
-    console.log(allMeetTypes);
-    console.log(nationalMeets);
       
     await browser.close()
     return nationalMeets;
