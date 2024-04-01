@@ -80,9 +80,11 @@ async function writeResults(path:string, header:{id:string, title:string}[], dat
 function formatAthleteData(data: string):string[]{
     return data.replaceAll(',','').split(/\r?\n/).map(elem => elem.trim()).filter(elem => elem !== '');
 }
+
 function formatMeetTitle(data:string):string{
     return data.replace(',', '').trim().replace(' - Members', '')
 }
+
 async function readCsv(filePath:string):Promise<UpcomingMeet[]> {
     const readFileAsync = promisify(fs.readFile);
 
@@ -104,8 +106,17 @@ async function readCsv(filePath:string):Promise<UpcomingMeet[]> {
     }
 }
 
-
-//   
+async function deleteFile(filePath:string):Promise<void> {
+    return new Promise((resolve, reject) => {
+        fs.unlink(filePath, (err) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve();
+            }
+        });
+    });
+}
 
 
 
@@ -116,16 +127,26 @@ async function run(){
 
     //if there is the file path ./data/national_meets_meta.csv
     //skip this step
+    //what if it exists but is empty
+    //what are the ways this could fail
+    // error while scraping upcoming on retry it would have the file exists
     fs.access('./data/national_meets_meta.csv', fs.constants.F_OK, async (err) => {
         if (err) {
             // File doesn't exist
-            meetsArray = await scrapeAllUpcoming();
-       
-            let meetsHeader = Object.keys(meetsArray[0]).map(el=>{
-                return {id: el, title: el}
-            })
-    
-            await writeResults('./data/national_meets_meta.csv', meetsHeader, meetsArray);
+            try{
+
+                meetsArray = await scrapeAllUpcoming();
+           
+                let meetsHeader = Object.keys(meetsArray[0]).map(el=>{
+                    return {id: el, title: el}
+                })
+        
+                await writeResults('./data/national_meets_meta.csv', meetsHeader, meetsArray);
+
+            }catch(e){
+                //error while getting data or writing
+                await deleteFile('./data/national_meets_meta.csv')
+            }
         } else {
             // File exists
             meetsArray = await readCsv('./data/national_meets_meta.csv')
@@ -212,6 +233,7 @@ function cleanDate(str:string|null): Date{
         return new Date();
     }
 }
+
 function createPath(str:string|null):string{
     if(str){
         let processedString = str.trim().replace(/[-,]/g, '').toLowerCase();
@@ -285,6 +307,7 @@ async function scrapeAllUpcoming(): Promise<UpcomingMeet[]>{
     return nationalMeets;
 }
 
+
 function retry(maxRetries: number, tryFn:any) { 
     let retries:number = 0;
     while(retries < maxRetries){
@@ -303,11 +326,6 @@ function retry(maxRetries: number, tryFn:any) {
     }
 }   
 
-function foo(){
-    // return true;
-    throw new Error('error')
-}
-retry(5,foo);
 
 
 // run();
@@ -316,7 +334,7 @@ retry(5,foo);
 
 
 
-
+//hardcoded meet data
 //   //likely get these meets from somewhere else... via scraping or something
 //   let meetsArray = [
 //     {
