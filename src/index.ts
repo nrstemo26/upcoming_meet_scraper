@@ -30,6 +30,8 @@ interface AthleteEntry{
 
 
 function athleteArrayToObj(array:string[], date:Date, title:string): AthleteEntry{
+    // console.log(array)
+    console.log(date)
     try{
         if(array.length === 11){
             return {
@@ -43,7 +45,7 @@ function athleteArrayToObj(array:string[], date:Date, title:string): AthleteEntr
                 division: array[8],
                 weight_class: array[9],
                 entry_total: array[10],
-                meet_date: date.toISOString().split('T')[0],
+                meet_date: new Date(date).toISOString().split('T')[0],
                 meet_name: title,
             }
         }else{
@@ -158,10 +160,12 @@ async function scrapeMetaAndSpecific(){
         }catch(e){
             //error while getting data or writing
             await deleteFile(meetMetaPath)
+            throw new Error();
         }
     }    
 
-    for(let i = 0; i< meetsArray.length; i++){
+    // for(let i = 0; i< meetsArray.length; i++){
+    for(let i = 0; i< 1; i++){
         let {path, date, url} = meetsArray[i];
 
         if(!(await fileExists(path))){
@@ -169,13 +173,12 @@ async function scrapeMetaAndSpecific(){
                 await scrapeMeet(path, url, date);
             }catch(e){
                 await deleteFile(path)
-
+                throw new Error();
             }
         }
     }
 
     return true;
-
 }
 
 async function run(){
@@ -200,7 +203,7 @@ async function scrapeMeet(csvPath:string, url:string, date:Date){
     const page = await browser.newPage();
     await page.goto(url);
     await page.waitForSelector('table')//wait for table to appear
-    
+    await page.waitForTimeout(5000)
     // let meetTitle = await page.getByRole('heading').filter().allTextContents();
 
     let meetTitle = formatMeetTitle(await page.locator('.v-card__title').first().getByRole('heading').innerText());
