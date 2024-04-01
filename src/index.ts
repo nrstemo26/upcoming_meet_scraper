@@ -190,7 +190,9 @@ async function scrapeMeet(csvPath:string, url:string, date:Date){
     //
     //
     //
+    try{
 
+   
     const browser = await playwright.chromium.launch({
         headless: true,//setting to true will not run the ui
     })
@@ -227,7 +229,11 @@ async function scrapeMeet(csvPath:string, url:string, date:Date){
     })
 
     await writeResults(csvPath, csvHeader, athleteData)
-   
+    }catch(e){
+        console.log('error scraping')   
+    }
+
+
 }
 
 function cleanMeetType(str:string|null): string{
@@ -373,28 +379,3 @@ run();
 //     //     url:'https://usaweightlifting.sport80.com/public/events/12701/entries/19125?bl=locator'
 //     // },
 // ] 
-
-
-// fs.access('./data/national_meets_meta.csv', fs.constants.F_OK, async (err) => {
-// if (err) {
-//     // File doesn't exist
-//     try{
-
-//         meetsArray = await scrapeAllUpcoming();
-   
-//         let meetsHeader = Object.keys(meetsArray[0]).map(el=>{
-//             return {id: el, title: el}
-//         })
-
-//         await writeResults('./data/national_meets_meta.csv', meetsHeader, meetsArray);
-
-//     }catch(e){
-//         //error while getting data or writing
-//         await deleteFile('./data/national_meets_meta.csv')
-//     }
-// } else {
-//     // File exists
-//     meetsArray = await readCsv('./data/national_meets_meta.csv')
-//     console.log(meetsArray);
-    
-// }
