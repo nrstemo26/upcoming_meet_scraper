@@ -142,20 +142,22 @@ async function scrapeMetaAndSpecific(){
     let meetMetaPath:string = './data/national_meets_meta.csv'; 
 
     if(await fileExists(meetMetaPath)){
-        meetsArray = await readCsv('./data/national_meets_meta.csv')
-        console.log(meetsArray);
+        console.log('meta file already exists')
+        meetsArray = await readCsv(meetMetaPath);
+        // console.log(meetsArray);
     }else{
         try{
+            console.log('meta file does not exists')
             meetsArray = await scrapeAllUpcoming();
     
             let meetsHeader = Object.keys(meetsArray[0]).map(el=>{
                 return {id: el, title: el}
             })
     
-            await writeResults('./data/national_meets_meta.csv', meetsHeader, meetsArray);
+            await writeResults(meetMetaPath, meetsHeader, meetsArray);
         }catch(e){
             //error while getting data or writing
-            await deleteFile('./data/national_meets_meta.csv')
+            await deleteFile(meetMetaPath)
         }
     }    
 
@@ -183,6 +185,12 @@ async function run(){
 
 // npx playwright codegen https://usaweightlifting.sport80.com/public/events/12701/entries/19125?bl=locator
 async function scrapeMeet(csvPath:string, url:string, date:Date){
+    //we have some errors in here
+    // try blocks??
+    //
+    //
+    //
+
     const browser = await playwright.chromium.launch({
         headless: true,//setting to true will not run the ui
     })
@@ -259,6 +267,7 @@ function createPath(str:string|null):string{
     return 'foo.csv'
 }
 
+// 
 
 async function scrapeAllUpcoming(): Promise<UpcomingMeet[]>{
     let nationalMeets:UpcomingMeet[] = [];
@@ -345,7 +354,7 @@ async function retry(maxRetries: number, tryFn:any) {
 
 
 
-// run();
+run();
 
 
 
