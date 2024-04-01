@@ -118,6 +118,20 @@ async function deleteFile(filePath:string):Promise<void> {
     });
 }
 
+async function fileExists(path:string): Promise<Boolean>{
+    try {
+        // Using fs.promises.stat() for asynchronous file existence checking
+        await fs.promises.stat(path);
+        return true; // File exists
+    } catch (error: any) {
+        if (error.code === 'ENOENT') {
+            return false; // File doesn't exist
+        }
+        // Re-throw other errors
+        throw error;
+    }
+}
+
 
 
 async function run(){
@@ -129,7 +143,7 @@ async function run(){
     //skip this step
     //what if it exists but is empty
     //what are the ways this could fail
-    // error while scraping upcoming on retry it would have the file exists
+    //error while scraping upcoming on retry it would have the file exists
     fs.access('./data/national_meets_meta.csv', fs.constants.F_OK, async (err) => {
         if (err) {
             // File doesn't exist
@@ -155,8 +169,17 @@ async function run(){
         }
     });
 
-    for(let i=0; i< meetsArray.length; i++){
-        await scrapeMeet(meetsArray[i].path, meetsArray[i].url, meetsArray[i].date);
+    for(let i = 0; i< meetsArray.length; i++){
+        let {path, date, url} = meetsArray[i];
+
+        if(!(await fileExists(path))){
+            try{
+                await scrapeMeet(path, url, date);
+            }catch(e){
+                await deleteFile(path)
+                
+            }
+        }
     }
 
     return true;
