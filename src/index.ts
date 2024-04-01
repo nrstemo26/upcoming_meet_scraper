@@ -30,8 +30,9 @@ interface AthleteEntry{
 
 
 function athleteArrayToObj(array:string[], date:Date, title:string): AthleteEntry{
-    // console.log(array)
+    console.log(array)
     console.log(date)
+    console.log(title)
     try{
         if(array.length === 11){
             return {
@@ -164,8 +165,7 @@ async function scrapeMetaAndSpecific(){
         }
     }    
 
-    // for(let i = 0; i< meetsArray.length; i++){
-    for(let i = 0; i< 1; i++){
+    for(let i = 0; i< meetsArray.length; i++){
         let {path, date, url} = meetsArray[i];
 
         if(!(await fileExists(path))){
@@ -188,14 +188,7 @@ async function run(){
 
 // npx playwright codegen https://usaweightlifting.sport80.com/public/events/12701/entries/19125?bl=locator
 async function scrapeMeet(csvPath:string, url:string, date:Date){
-    //we have some errors in here
-    // try blocks??
-    //
-    //
-    //
     try{
-
-   
     const browser = await playwright.chromium.launch({
         headless: true,//setting to true will not run the ui
     })
@@ -209,7 +202,7 @@ async function scrapeMeet(csvPath:string, url:string, date:Date){
     let meetTitle = formatMeetTitle(await page.locator('.v-card__title').first().getByRole('heading').innerText());
 
   ;
-    console.log(meetTitle)
+    console.log('scraping meet: ', meetTitle)
 
     // let headers = await page.getByRole('columnheader').allTextContents()
  
@@ -220,23 +213,29 @@ async function scrapeMeet(csvPath:string, url:string, date:Date){
 
     let athleteData: AthleteEntry[] = [];
 
-    for(let i=0; i< totalAthleteCount; i++){
-        let currentAthlete = formatAthleteData(athletes[i])
-        let athleteObj: AthleteEntry = athleteArrayToObj(currentAthlete, date, meetTitle);
-        athleteData.push(athleteObj)
-    }
-    await browser.close();
+    if(athletes[0] === 'No Member Entries'){
+        console.log('no entries')
+        return;
+    }else{
+        for(let i=0; i< totalAthleteCount; i++){
+            let currentAthlete = formatAthleteData(athletes[i])
+            let athleteObj: AthleteEntry = athleteArrayToObj(currentAthlete, date, meetTitle);
+            athleteData.push(athleteObj)
+        }
+        await browser.close();
+        
+        const csvHeader = Object.keys(athleteData[0]).map(el=>{
+            return {'id': el, 'title': el}
+        })
     
-    const csvHeader = Object.keys(athleteData[0]).map(el=>{
-        return {'id': el, 'title': el}
-    })
-
-    await writeResults(csvPath, csvHeader, athleteData)
+        await writeResults(csvPath, csvHeader, athleteData)
+    }
+    
     }catch(e){
         console.log('error scraping')   
     }
 
-
+    console.log('done scraping')
 }
 
 function cleanMeetType(str:string|null): string{
