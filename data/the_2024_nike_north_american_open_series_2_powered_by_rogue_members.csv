@@ -1,6 +1,6 @@
 member_id,first_name,last_name,state,birth_year,club,gender,division,weight_class,entry_total,meet_date,meet_name
-1069984,Brianna,Bowens (She/her/hers/herself),California,2014,Team Juanatas-Bowens,Female,Women's 13 Under Age Group,55,56,2024-09-01,The 2024 Nike North American Open Series 2 powered by Rogue
-1064673,Mikaella,Bowens (She/her/hers/herself),California,2012,Team Juanatas-Bowens,Female,Women's 13 Under Age Group,+64,97,2024-09-01,The 2024 Nike North American Open Series 2 powered by Rogue
+1069984,Brianna,Bowens (She/her/hers/herself),California,2014,KC WEIGHTLIFTING,Female,Women's 13 Under Age Group,55,56,2024-09-01,The 2024 Nike North American Open Series 2 powered by Rogue
+1064673,Mikaella,Bowens (She/her/hers/herself),California,2012,KC WEIGHTLIFTING,Female,Women's 13 Under Age Group,+64,97,2024-09-01,The 2024 Nike North American Open Series 2 powered by Rogue
 1057681,Jaedyn,Orton,Georgia,2009,5 Rings Barbell,Female,Women's 14-15 Age Group,45,125,2024-09-01,The 2024 Nike North American Open Series 2 powered by Rogue
 1066324,Kaydence,Moss (She/her/hers/herself),Texas,2009,Waco Barbell,Female,Women's 14-15 Age Group,+76,106,2024-09-01,The 2024 Nike North American Open Series 2 powered by Rogue
 1065014,Katie,Koontz (She/her/hers/herself),Washington,1986,Tacoma Strength Weightlifting,Female,Women's Masters (35-39),76,128,2024-09-01,The 2024 Nike North American Open Series 2 powered by Rogue
@@ -29,6 +29,7 @@ member_id,first_name,last_name,state,birth_year,club,gender,division,weight_clas
 1011849,Judy,Zhou,California,1995,PARAMOUNT BARBELL CLUB,Female,Open Women's,55,140,2024-09-01,The 2024 Nike North American Open Series 2 powered by Rogue
 1051784,Carla,Lopez,California,1991,CODE 3 ATHLETICS,Female,Open Women's,55,135,2024-09-01,The 2024 Nike North American Open Series 2 powered by Rogue
 1019511,Cadence,Ricci,California,2004,Unaffiliated,Female,Open Women's,55,130,2024-09-01,The 2024 Nike North American Open Series 2 powered by Rogue
+1067064,Marissa,Reeves (She/her/hers/herself),Washington,1989,Wolf Pack Weightlifting,Female,Open Women's,55,115,2024-09-01,The 2024 Nike North American Open Series 2 powered by Rogue
 1031798,Jeanna,Mullen (She/her/hers/herself),Texas,1995,Bexar Barbell,Female,Open Women's,64,170,2024-09-01,The 2024 Nike North American Open Series 2 powered by Rogue
 1047931,Angela,Henderson (She/her/hers/herself),Texas,1995,Unaffiliated,Female,Open Women's,64,165,2024-09-01,The 2024 Nike North American Open Series 2 powered by Rogue
 1058445,Emily,Khaykin,Virginia,1993,CHFP WEIGHTLIFTING CLUB,Female,Open Women's,64,140,2024-09-01,The 2024 Nike North American Open Series 2 powered by Rogue
