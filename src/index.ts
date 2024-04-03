@@ -194,44 +194,12 @@ async function scrapeMeet(csvPath:string, url:string, date:Date){
     })
     const page = await browser.newPage();
     await page.goto(url);
-
-    //couldn't get it to work
-    //perhaps its wait for request?? then i get the specific url guy
-    // const requestPromise = page.waitForRequest(request =>
-    //     request.url() === 'https://usaweightlifting.sport80.com/api/public/events/datatable/12701/entries/19125?data=1&bl=locator' 
-    //     && request.method() === 'POST',
-    // );
-    // let foo = await requestPromise;
-    // console.log(await foo.postDataJSON())
-    // console.log(await requestPromise)
-
-    await page.screenshot({path:'foo.png'})
-
-    //pseudocode
-    //let progressLocator = page.locator('locator for progress bar')
-    //idk if the options go above or below or another spot?
-    //await progressLocator.waitFor()
-
-    // const orderSent = page.locator('#order-sent');
-    // await orderSent.waitFor();
-
-
-    //now what if there is no
-    await page.waitForSelector('table td.text-start')
-    //wait for table to appear
- 
-    await page.screenshot({path:'foo2.png'})
-
-    //lets get a selector
-    //so how can we have a more specific selector
-
-
-    await page.waitForTimeout(5000)
-    // let meetTitle = await page.getByRole('heading').filter().allTextContents();
+    
+    let progressLocator = page.getByRole("progressbar")
+    await progressLocator.waitFor({state:'detached'})
 
     let meetTitle = formatMeetTitle(await page.locator('.v-card__title').first().getByRole('heading').innerText());
 
-  ;
     console.log('scraping meet: ', meetTitle)
 
     // let headers = await page.getByRole('columnheader').allTextContents()
@@ -240,10 +208,12 @@ async function scrapeMeet(csvPath:string, url:string, date:Date){
     let athletes = await athleteLocator.allInnerTexts() 
     let totalAthleteCount = await athleteLocator.count() 
 
+    let resultsString = await page.getByRole('heading', { name: 'Records' }).innerText()
+    let resultsCount = parseInt(resultsString.trim().split(' Records')[0])
 
     let athleteData: AthleteEntry[] = [];
 
-    if(athletes[0] === 'No Member Entries'){
+    if(resultsCount === 0 ){
         console.log('done scraping... no entries')
         return;
     }else{
