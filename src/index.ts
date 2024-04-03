@@ -3,7 +3,6 @@ import playwright from 'playwright';
 import fs from 'fs';
 import csv from 'csv-parser';
 import { promisify } from 'util';
-import { request } from 'http';
 
 let allMeetTypes:string[] = [];
 
@@ -69,7 +68,6 @@ function athleteArrayToObj(array:string[], date:Date, title:string): AthleteEntr
     }
 }
 
-
 async function writeResults(path:string, header:{id:string, title:string}[], data:AthleteEntry[]|UpcomingMeet[]){
     const csvWriter = createObjectCsvWriter({
         path: path,
@@ -134,12 +132,9 @@ async function fileExists(path:string): Promise<Boolean>{
 }
 
 
-
 async function scrapeMetaAndSpecific(){
     let meetsArray:UpcomingMeet[] = [];
 
-    //what are the ways this could fail
-    //error while scraping upcoming on retry it would have the file exists
     let meetMetaPath:string = './data/national_meets_meta.csv'; 
 
     if(await fileExists(meetMetaPath)){
@@ -149,7 +144,7 @@ async function scrapeMetaAndSpecific(){
     }else{
         try{
             console.log('meta file does not exists')
-            meetsArray = await scrapeAllUpcoming();
+            meetsArray = await scrapeUpcomingMeta();
     
             let meetsHeader = Object.keys(meetsArray[0]).map(el=>{
                 return {id: el, title: el}
@@ -163,18 +158,24 @@ async function scrapeMetaAndSpecific(){
         }
     }    
 
-    for(let i = 0; i< meetsArray.length; i++){
-        let {path, date, url} = meetsArray[i];
-
-        if(!(await fileExists(path))){
-            try{
-                await scrapeMeet(path, url, date);
-            }catch(e){
-                await deleteFile(path)
-                throw new Error();
+    try{
+        for(let i = 0; i< meetsArray.length; i++){
+            let {path, date, url} = meetsArray[i];
+            
+            if(!(await fileExists(path))){
+                try{
+                    await scrapeMeet(path, url, date);
+                }catch(e){
+                    await deleteFile(path)
+                    throw new Error();
+                }
             }
         }
+    }catch(e){
+        console.log('caught me an error')
+        throw new Error()
     }
+    
 
     return true;
 }
@@ -188,7 +189,7 @@ async function run(){
 // npx playwright codegen https://usaweightlifting.sport80.com/public/events/12701/entries/19125?bl=locator
 async function scrapeMeet(csvPath:string, url:string, date:Date){
     try{
-
+        
     const browser = await playwright.chromium.launch({
         headless: true,//setting to true will not run the ui
     })
@@ -222,17 +223,21 @@ async function scrapeMeet(csvPath:string, url:string, date:Date){
             let athleteObj: AthleteEntry = athleteArrayToObj(currentAthlete, date, meetTitle);
             athleteData.push(athleteObj)
         }
+        
         await browser.close();
         
         const csvHeader = Object.keys(athleteData[0]).map(el=>{
             return {'id': el, 'title': el}
         })
-    
+        
         await writeResults(csvPath, csvHeader, athleteData)
+        
     }
     
     }catch(e){
-        console.log('error scraping')   
+        console.log('error scraping', e)   
+        throw new Error('from the scrape meet function');
+       
     }
 
     console.log('done scraping')
@@ -259,8 +264,6 @@ function cleanMeetType(str:string|null): string{
 
 }
 
-
-
 function cleanDate(str:string|null): Date{
     if(str){
         let date = str.split('-')[1]
@@ -279,9 +282,7 @@ function createPath(str:string|null):string{
     return 'foo.csv'
 }
 
-// 
-
-async function scrapeAllUpcoming(): Promise<UpcomingMeet[]>{
+async function scrapeUpcomingMeta(): Promise<UpcomingMeet[]>{
     let nationalMeets:UpcomingMeet[] = [];
     const browser = await playwright.chromium.launch({
         headless: true,
@@ -348,6 +349,7 @@ async function retry(maxRetries: number, tryFn:any) {
     let retries:number = 0;
     while(retries < maxRetries){
         try{
+            console.log('retries: ', retries)
             let done = await tryFn();
             if(done) break;
         }catch(e){
