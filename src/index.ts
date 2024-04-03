@@ -180,8 +180,8 @@ async function scrapeMetaAndSpecific(){
 }
 
 async function run(){
-    await scrapeMeet('./foo.csv','https://usaweightlifting.sport80.com/public/events/12701/entries/19125?bl=locator', new Date('1/1/2023'))
-    // await retry(5,scrapeMetaAndSpecific);
+    // await scrapeMeet('./foo.csv','https://usaweightlifting.sport80.com/public/events/12701/entries/19125?bl=locator', new Date('1/1/2023'))
+    await retry(5,scrapeMetaAndSpecific);
 }
 
 
@@ -284,8 +284,7 @@ function createPath(str:string|null):string{
 async function scrapeAllUpcoming(): Promise<UpcomingMeet[]>{
     let nationalMeets:UpcomingMeet[] = [];
     const browser = await playwright.chromium.launch({
-        headless: true,//setting to true will not run the ui
-        // headless: false,//setting to true will not run the ui
+        headless: true,
     })
 
     const page = await browser.newPage();
@@ -369,8 +368,6 @@ run();
 
 
 
-
-
 //hardcoded meet data
 //   //likely get these meets from somewhere else... via scraping or something
 //   let meetsArray = [
@@ -379,8 +376,4 @@ run();
 //         url:'https://usaweightlifting.sport80.com/public/events/12701/entries/19125?bl=locator',
 //         date: new Date('June 23, 2023')
 //     },
-//     // {
-//     //     path: 'output2.csv',
-//     //     url:'https://usaweightlifting.sport80.com/public/events/12701/entries/19125?bl=locator'
-//     // },
 // ] 
