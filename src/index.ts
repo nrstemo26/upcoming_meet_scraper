@@ -80,8 +80,13 @@ function formatAthleteData(data: string):string[]{
     return data.replaceAll(',','').split(/\r?\n/).map(elem => elem.trim()).filter(elem => elem !== '');
 }
 
-function formatMeetTitle(data:string):string{
-    return data.replace(',', '').trim().replace(' - Members', '')
+function formatMeetTitle(data:string|null):string{
+    if(data){
+        return data.replace(',', '').trim().replace(' - Members', '')
+    }
+    else{
+        throw new Error('no data')
+    }
 }
 
 async function readCsv(filePath:string):Promise<UpcomingMeet[]> {
@@ -198,6 +203,8 @@ async function scrapeMeet(csvPath:string, url:string, date:Date){
     
     let progressLocator = page.getByRole("progressbar")
     await progressLocator.waitFor({state:'detached'})
+    
+    await page.waitForTimeout(5000)
 
     let meetTitle = formatMeetTitle(await page.locator('.v-card__title').first().getByRole('heading').innerText());
 
@@ -211,6 +218,7 @@ async function scrapeMeet(csvPath:string, url:string, date:Date){
 
     let resultsString = await page.getByRole('heading', { name: 'Records' }).innerText()
     let resultsCount = parseInt(resultsString.trim().split(' Records')[0])
+    // let resultsCount = parseInt(resultsString.trim().split(' Records')[0])
 
     let athleteData: AthleteEntry[] = [];
 
@@ -321,7 +329,7 @@ async function scrapeUpcomingMeta(): Promise<UpcomingMeet[]>{
                 const page1 = await page1Promise;
                 await page1.waitForSelector('.v-card__title')
                 
-                let name = await page1.locator('.v-card__title h2').textContent();
+                let name = formatMeetTitle(await page1.locator('.v-card__title h2').textContent());
                 
                 nationalMeets.push({
                     url: page1.url(),
