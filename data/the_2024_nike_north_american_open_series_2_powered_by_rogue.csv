@@ -5,6 +5,7 @@ member_id,first_name,last_name,state,birth_year,club,gender,division,weight_clas
 1066324,Kaydence,Moss (She/her/hers/herself),Texas,2009,Waco Barbell,Female,Women's 14-15 Age Group,+76,106,2024-09-01,The 2024 Nike North American Open Series 2 powered by Rogue
 1065014,Katie,Koontz (She/her/hers/herself),Washington,1986,Tacoma Strength Weightlifting,Female,Women's Masters (35-39),76,128,2024-09-01,The 2024 Nike North American Open Series 2 powered by Rogue
 1068998,Amber,Lavigne-Bulman,Washington,1989,PARAMOUNT BARBELL CLUB,Female,Women's Masters (35-39),76,125,2024-09-01,The 2024 Nike North American Open Series 2 powered by Rogue
+1034283,Mary,Quigley (She/her/hers/herself),North Carolina,1987,Bexar Barbell,Female,Women's Masters (35-39),81,170,2024-09-01,The 2024 Nike North American Open Series 2 powered by Rogue
 1066773,Natalie,Smith,Texas,1986,Austin Barbell,Female,Women's Masters (35-39),81,133,2024-09-01,The 2024 Nike North American Open Series 2 powered by Rogue
 1064455,Amy,Tarangelo (She/her/hers/herself),Oregon,1989,Heroic Barbell,Female,Women's Masters (35-39),81,105,2024-09-01,The 2024 Nike North American Open Series 2 powered by Rogue
 1015193,Felicia,Sifers (She/her/hers/herself),Oklahoma,1988,OKC BARBELL CLUB,Female,Women's Masters (35-39),87,155,2024-09-01,The 2024 Nike North American Open Series 2 powered by Rogue
@@ -19,10 +20,14 @@ member_id,first_name,last_name,state,birth_year,club,gender,division,weight_clas
 1063361,Brandy,Basey (She/her/hers/herself),Kentucky,1981,Unaffiliated,Female,Women's Masters (40-44),81,121,2024-09-01,The 2024 Nike North American Open Series 2 powered by Rogue
 1032371,Vladislava,Davydova,California,1980,Unaffiliated,Female,Women's Masters (40-44),81,120,2024-09-01,The 2024 Nike North American Open Series 2 powered by Rogue
 1044167,Rafat,Fields (She/her/hers/herself),Ohio,1980,Unaffiliated,Female,Women's Masters (40-44),87,110,2024-09-01,The 2024 Nike North American Open Series 2 powered by Rogue
+1045014,Kimberlee,Douglas (She/her/hers/herself),Oregon,1981,Haworth Weightlifting,Female,Women's Masters (40-44),+87,200,2024-09-01,The 2024 Nike North American Open Series 2 powered by Rogue
 185487,Courtney,Stone (She/her/hers/herself),Virginia,1978,Bexar Barbell,Female,Women's Masters (45-49),64,130,2024-09-01,The 2024 Nike North American Open Series 2 powered by Rogue
 165099,Mira,Kwon Gracia (She/her/hers/herself),Oregon,1971,Haworth Weightlifting,Female,Women's Masters (50-54),55,128,2024-09-01,The 2024 Nike North American Open Series 2 powered by Rogue
+1055208,Danielle,Jorda (She/her/hers/herself),California,1974,SENSE Weightlifting Village,Female,Women's Masters (50-54),55,90,2024-09-01,The 2024 Nike North American Open Series 2 powered by Rogue
 1069262,Amy,Herrera (She/her/hers/herself),Florida,1973,Unaffiliated,Female,Women's Masters (50-54),64,87,2024-09-01,The 2024 Nike North American Open Series 2 powered by Rogue
 1031124,Karen,Buchanan (She/her/hers/herself),Texas,1966,VAUGHN WEIGHTLIFTING,Female,Women's Masters (55-59),59,77,2024-09-01,The 2024 Nike North American Open Series 2 powered by Rogue
+1041109,Jennifer,Sprague (She/her/hers/herself),Washington,1969,RCF Weightlifting Club,Female,Women's Masters (55-59),64,106,2024-09-01,The 2024 Nike North American Open Series 2 powered by Rogue
+214727,Deanna,Johnson (She/her/hers/herself),Oregon,1964,Eastside Barbell,Female,Women's Masters (60-64),59,77,2024-09-01,The 2024 Nike North American Open Series 2 powered by Rogue
 1032679,Terri,Isbell (She/her/hers/herself),Texas,1963,VAUGHN WEIGHTLIFTING,Female,Women's Masters (60-64),81,78,2024-09-01,The 2024 Nike North American Open Series 2 powered by Rogue
 1007364,Deborah,Strobel,Oklahoma,1958,Pure Health Barbell,Female,Women's Masters (65-69),87,106,2024-09-01,The 2024 Nike North American Open Series 2 powered by Rogue
 1065847,Jessica,Prashaw (She/her/hers/herself),Virginia,1991,CHFP WEIGHTLIFTING CLUB,Female,Open Women's,49,110,2024-09-01,The 2024 Nike North American Open Series 2 powered by Rogue
@@ -35,6 +40,7 @@ member_id,first_name,last_name,state,birth_year,club,gender,division,weight_clas
 1058445,Emily,Khaykin,Virginia,1993,CHFP WEIGHTLIFTING CLUB,Female,Open Women's,64,140,2024-09-01,The 2024 Nike North American Open Series 2 powered by Rogue
 1070330,Holly,Bus (She/her/hers/herself),California,1996,Unaffiliated,Female,Open Women's,64,135,2024-09-01,The 2024 Nike North American Open Series 2 powered by Rogue
 1058370,Laura,Bleiler (She/her/hers/herself),Virginia,1990,CHFP WEIGHTLIFTING CLUB,Female,Open Women's,64,123,2024-09-01,The 2024 Nike North American Open Series 2 powered by Rogue
+1051983,Elyse,McMullen,Texas,1998,Unaffiliated,Female,Open Women's,64,120,2024-09-01,The 2024 Nike North American Open Series 2 powered by Rogue
 1059621,Jessica,Ferrari (She/her/hers/herself),Texas,1995,Austin Barbell,Female,Open Women's,71,150,2024-09-01,The 2024 Nike North American Open Series 2 powered by Rogue
 1045906,Alexandra,Prymek (She/her/hers/herself),Louisiana,1998,Unaffiliated,Female,Open Women's,71,144,2024-09-01,The 2024 Nike North American Open Series 2 powered by Rogue
 1015453,Carley,Graham (She/her/hers/herself),Oklahoma,1995,OKC BARBELL CLUB,Female,Open Women's,76,180,2024-09-01,The 2024 Nike North American Open Series 2 powered by Rogue
@@ -60,6 +66,7 @@ member_id,first_name,last_name,state,birth_year,club,gender,division,weight_clas
 1032033,Eric,Kurschinski,Texas,1979,Unaffiliated,Male,Men's Masters (45-49),67,186,2024-09-01,The 2024 Nike North American Open Series 2 powered by Rogue
 1010844,Michael,Ben-Hain,Florida,1976,Bexar Barbell,Male,Men's Masters (45-49),81,175,2024-09-01,The 2024 Nike North American Open Series 2 powered by Rogue
 1064314,Robert,Rosenqvist (He/him/his/himself),Texas,1975,Wear The Crown Barbell,Male,Men's Masters (45-49),81,155,2024-09-01,The 2024 Nike North American Open Series 2 powered by Rogue
+1038086,Shawn,Harbert (He/him/his/himself),Oregon,1975,Heroic Barbell,Male,Men's Masters (45-49),89,170,2024-09-01,The 2024 Nike North American Open Series 2 powered by Rogue
 1067843,Jonathan,Herrera (He/him/his/himself),Florida,1977,Unaffiliated,Male,Men's Masters (45-49),96,230,2024-09-01,The 2024 Nike North American Open Series 2 powered by Rogue
 1074745,Joel,Gonzales,Texas,1976,Wear The Crown Barbell,Male,Men's Masters (45-49),96,210,2024-09-01,The 2024 Nike North American Open Series 2 powered by Rogue
 1009127,William,Young III,West Virginia,1974,EAST COAST GOLD W/L TEAM,Male,Men's Masters (50-54),89,165,2024-09-01,The 2024 Nike North American Open Series 2 powered by Rogue

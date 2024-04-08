@@ -1,5 +1,6 @@
 member_id,first_name,last_name,state,birth_year,club,gender,division,weight_class,entry_total,meet_date,meet_name
 1062630,Rayya,Howard (She/her/hers/herself),Tennessee,2016,Nashville Weightlifting Club,Female,Women's 13 Under Age Group,30,46,2024-06-23,The 2024 Nike National Youth Championships powered by Rogue
+1072086,Emma,Fan,California,2014,Standard Strength,Female,Women's 13 Under Age Group,30,34,2024-06-23,The 2024 Nike National Youth Championships powered by Rogue
 1068922,Alyssa,Entrikin (She/her/hers/herself),Illinois,2013,Method Weightlifting,Female,Women's 13 Under Age Group,33,52,2024-06-23,The 2024 Nike National Youth Championships powered by Rogue
 1060871,Olivia,Fischer,Idaho,2012,BOISE BARBELL,Female,Women's 13 Under Age Group,33,40,2024-06-23,The 2024 Nike National Youth Championships powered by Rogue
 1040761,Aurora,van Ulft,Ontario,2013,Team Divergent,Female,Women's 13 Under Age Group,36,132,2024-06-23,The 2024 Nike National Youth Championships powered by Rogue
@@ -11,11 +12,13 @@ member_id,first_name,last_name,state,birth_year,club,gender,division,weight_clas
 1059943,Isabella,Silva (She/her/hers/herself),Texas,2011,EAST COAST GOLD W/L TEAM,Female,Women's 13 Under Age Group,49,79,2024-06-23,The 2024 Nike National Youth Championships powered by Rogue
 1065927,Mila,Kaufman,Florida,2012,TEAM SOUL MIAMI,Female,Women's 13 Under Age Group,49,40,2024-06-23,The 2024 Nike National Youth Championships powered by Rogue
 1065397,Scarlet,Ruiz,New Jersey,2011,McKenna Weightlifting,Female,Women's 13 Under Age Group,55,92,2024-06-23,The 2024 Nike National Youth Championships powered by Rogue
+1055634,Kayla,Doherty (She/her/hers/herself),California,2012,HASSLE FREE BBC,Female,Women's 13 Under Age Group,55,80,2024-06-23,The 2024 Nike National Youth Championships powered by Rogue
 1056922,Sonya,Nunez (She/her/hers/herself),Michigan,2011,4 Star Strength,Female,Women's 13 Under Age Group,55,79,2024-06-23,The 2024 Nike National Youth Championships powered by Rogue
 1062553,Dylan,Lee,California,2011,HASSLE FREE BBC,Female,Women's 13 Under Age Group,55,70,2024-06-23,The 2024 Nike National Youth Championships powered by Rogue
 1069984,Brianna,Bowens (She/her/hers/herself),California,2014,KC WEIGHTLIFTING,Female,Women's 13 Under Age Group,55,56,2024-06-23,The 2024 Nike National Youth Championships powered by Rogue
 1065875,Eesha,Pallath (She/her/hers/herself),California,2013,Fortified Strength,Female,Women's 13 Under Age Group,55,51,2024-06-23,The 2024 Nike National Youth Championships powered by Rogue
 1066116,Myla,Bryan,Idaho,2011,CDA Heart and Barbell Club,Female,Women's 13 Under Age Group,59,90,2024-06-23,The 2024 Nike National Youth Championships powered by Rogue
+1073029,Madison,Hatcher (She/her/hers/herself),Florida,2012,Full Send Oly,Female,Women's 13 Under Age Group,59,90,2024-06-23,The 2024 Nike National Youth Championships powered by Rogue
 1061919,Sophie,Baker (She/her/hers/herself),Illinois,2011,The Bar Weightlifting Club,Female,Women's 13 Under Age Group,64,64,2024-06-23,The 2024 Nike National Youth Championships powered by Rogue
 1064673,Mikaella,Bowens (She/her/hers/herself),California,2012,KC WEIGHTLIFTING,Female,Women's 13 Under Age Group,+64,97,2024-06-23,The 2024 Nike National Youth Championships powered by Rogue
 1057681,Jaedyn,Orton,Georgia,2009,5 Rings Barbell,Female,Women's 14-15 Age Group,45,125,2024-06-23,The 2024 Nike National Youth Championships powered by Rogue
@@ -60,7 +63,9 @@ member_id,first_name,last_name,state,birth_year,club,gender,division,weight_clas
 1023189,Samantha,Goodman,Missouri,2008,KC WEIGHTLIFTING,Female,Women's 16-17 Age Group,64,132,2024-06-23,The 2024 Nike National Youth Championships powered by Rogue
 1069833,Vivianna,Foster (She/her/hers/herself),Florida,2008,Rise Weightlifting,Female,Women's 16-17 Age Group,64,110,2024-06-23,The 2024 Nike National Youth Championships powered by Rogue
 1065659,Itzel,Morales (She/her/hers/herself),Florida,2007,Unaffiliated,Female,Women's 16-17 Age Group,71,178,2024-06-23,The 2024 Nike National Youth Championships powered by Rogue
+1060022,McKenzie,Hatcher (She/her/hers/herself),Florida,2008,Full Send Oly,Female,Women's 16-17 Age Group,71,171,2024-06-23,The 2024 Nike National Youth Championships powered by Rogue
 1068310,Alexis,Rissler (She/her/hers/herself),Florida,2008,TEAM FLORIDA GULFCOAST WL,Female,Women's 16-17 Age Group,76,153,2024-06-23,The 2024 Nike National Youth Championships powered by Rogue
+1044195,Valentina,Glass (She/her/hers/herself),Texas,2007,Austin Barbell,Female,Women's 16-17 Age Group,76,146,2024-06-23,The 2024 Nike National Youth Championships powered by Rogue
 1068571,Elle,Bays,Florida,2008,Jacksonville Weightlifting,Female,Women's 16-17 Age Group,76,145,2024-06-23,The 2024 Nike National Youth Championships powered by Rogue
 1056330,Ava,Jackson (She/her/hers/herself),Washington,2007,Puget Sound Weightlifting,Female,Women's 16-17 Age Group,76,130,2024-06-23,The 2024 Nike National Youth Championships powered by Rogue
 1065587,Makayla,Waterhouse (She/her/hers/herself),Florida,2007,North Port Weightlifting,Female,Women's 16-17 Age Group,+81,160,2024-06-23,The 2024 Nike National Youth Championships powered by Rogue
@@ -72,27 +77,39 @@ member_id,first_name,last_name,state,birth_year,club,gender,division,weight_clas
 1068945,Luke,Doherty (He/him/his/himself),California,2015,HASSLE FREE BBC,Male,Men's 13 Under Age Group,36,56,2024-06-23,The 2024 Nike National Youth Championships powered by Rogue
 1069223,Everett,Lee,California,2015,HASSLE FREE BBC,Male,Men's 13 Under Age Group,36,36,2024-06-23,The 2024 Nike National Youth Championships powered by Rogue
 1065398,Ellis,Ruiz,New Jersey,2013,McKenna Weightlifting,Male,Men's 13 Under Age Group,39,54,2024-06-23,The 2024 Nike National Youth Championships powered by Rogue
+1062718,Kayden,Doherty (He/him/his/himself),California,2015,HASSLE FREE BBC,Male,Men's 13 Under Age Group,44,70,2024-06-23,The 2024 Nike National Youth Championships powered by Rogue
 1059012,Leonel,Nunez (He/him/his/himself),Michigan,2012,4 Star Strength,Male,Men's 13 Under Age Group,49,70,2024-06-23,The 2024 Nike National Youth Championships powered by Rogue
 1071426,Ezekiel,Macias,Texas,2011,HASSLE FREE BBC,Male,Men's 13 Under Age Group,55,104,2024-06-23,The 2024 Nike National Youth Championships powered by Rogue
 1072753,Seth,Jenkins,Texas,2011,Unaffiliated,Male,Men's 13 Under Age Group,61,71,2024-06-23,The 2024 Nike National Youth Championships powered by Rogue
+1073668,Gabriel,Conde (He/him/his/himself),Texas,2012,Bobcat Barbell,Male,Men's 13 Under Age Group,67,61,2024-06-23,The 2024 Nike National Youth Championships powered by Rogue
 1068180,Christopher,Walker (He/him/his/himself),Georgia,2012,COASTAL EMPIRE WEIGHTLIFTING,Male,Men's 13 Under Age Group,+73,82,2024-06-23,The 2024 Nike National Youth Championships powered by Rogue
+1058285,Maximilian,Davila,Texas,2009,HUSZKA WEIGHTLIFTING CLUB,Male,Men's 14-15 Age Group,39,76,2024-06-23,The 2024 Nike National Youth Championships powered by Rogue
 1023478,Diego,Yoo,Indiana,2009,3 Kings Weightlifting Club,Male,Men's 14-15 Age Group,49,150,2024-06-23,The 2024 Nike National Youth Championships powered by Rogue
 1072999,Andrew,Weymer,Pennsylvania,2010,Unaffiliated,Male,Men's 14-15 Age Group,49,111,2024-06-23,The 2024 Nike National Youth Championships powered by Rogue
 1059950,Jaxson,Sullivan (He/him/his/himself),California,2010,HASSLE FREE BBC,Male,Men's 14-15 Age Group,55,105,2024-06-23,The 2024 Nike National Youth Championships powered by Rogue
 1042910,Preston,Sparks (He/him/his/himself),California,2009,Determination Strength and Performance,Male,Men's 14-15 Age Group,61,160,2024-06-23,The 2024 Nike National Youth Championships powered by Rogue
+1072824,Jesse,Castillo,Texas,2009,Bull Strength Barbell,Male,Men's 14-15 Age Group,67,165,2024-06-23,The 2024 Nike National Youth Championships powered by Rogue
 1045845,Lawson,Berardi (He/him/his/himself),Texas,2009,Bexar Barbell,Male,Men's 14-15 Age Group,67,150,2024-06-23,The 2024 Nike National Youth Championships powered by Rogue
 1061315,Dryden,Yates (He/him/his/himself),Georgia,2010,Bexar Barbell,Male,Men's 14-15 Age Group,67,150,2024-06-23,The 2024 Nike National Youth Championships powered by Rogue
+1072010,Max,Ferrara (He/him/his/himself),Texas,2009,Austin Barbell,Male,Men's 14-15 Age Group,73,140,2024-06-23,The 2024 Nike National Youth Championships powered by Rogue
 1063750,Alexis,Robbins (He/him/his/himself),Georgia,2010,COASTAL EMPIRE WEIGHTLIFTING,Male,Men's 14-15 Age Group,73,126,2024-06-23,The 2024 Nike National Youth Championships powered by Rogue
 1072393,Colten,Clyburn,Texas,2009,Unaffiliated,Male,Men's 14-15 Age Group,81,160,2024-06-23,The 2024 Nike National Youth Championships powered by Rogue
+1074942,Christopher,Gomez (He/him/his/himself),California,2009,HASSLE FREE BBC,Male,Men's 14-15 Age Group,81,145,2024-06-23,The 2024 Nike National Youth Championships powered by Rogue
 1073634,Thomas,Zawisza (He/him/his/himself),New Jersey,2009,CBA Colts Weightlifting,Male,Men's 14-15 Age Group,89,150,2024-06-23,The 2024 Nike National Youth Championships powered by Rogue
 1052288,Emory,McFann (He/him/his/himself),South Carolina,2009,Rising Tide Weightlifting,Male,Men's 14-15 Age Group,+89,205,2024-06-23,The 2024 Nike National Youth Championships powered by Rogue
+1060275,Elliot,Leet (He/him/his/himself),California,2009,HASSLE FREE BBC,Male,Men's 14-15 Age Group,+89,190,2024-06-23,The 2024 Nike National Youth Championships powered by Rogue
 1072201,Graeme,Osteen (He/him/his/himself),Texas,2009,Bull Strength Barbell,Male,Men's 14-15 Age Group,+89,163,2024-06-23,The 2024 Nike National Youth Championships powered by Rogue
 1064328,Jagarii,Gardner (He/him/his/himself),Florida,2007,Orlando Strength,Male,Men's 16-17 Age Group,55,152,2024-06-23,The 2024 Nike National Youth Championships powered by Rogue
+1071670,Lucas,Mansier,Ohio,2008,Root 18 Weightlifting,Male,Men's 16-17 Age Group,61,170,2024-06-23,The 2024 Nike National Youth Championships powered by Rogue
 1072083,TIMOTHY,NEAL,North Carolina,2008,ATHLETIC LAB WLC,Male,Men's 16-17 Age Group,61,141,2024-06-23,The 2024 Nike National Youth Championships powered by Rogue
 1063857,Zachariah,Hendrix (He/him/his/himself),Georgia,2008,COASTAL EMPIRE WEIGHTLIFTING,Male,Men's 16-17 Age Group,61,140,2024-06-23,The 2024 Nike National Youth Championships powered by Rogue
 1073460,Sawyer,Haglund (He/him/his/himself),Minnesota,2008,Unaffiliated,Male,Men's 16-17 Age Group,67,200,2024-06-23,The 2024 Nike National Youth Championships powered by Rogue
+1038703,Henry,Ludbrook (He/him/his/himself),Missouri,2007,Team Strength Works,Male,Men's 16-17 Age Group,67,200,2024-06-23,The 2024 Nike National Youth Championships powered by Rogue
 1063097,Thomas,Phillips (He/him/his/himself),Maryland,2007,TOUGH TEMPLE BARBELL CLUB,Male,Men's 16-17 Age Group,67,166,2024-06-23,The 2024 Nike National Youth Championships powered by Rogue
 1072144,Danny,Lapinski (He/him/his/himself),Virginia,2008,Unaffiliated,Male,Men's 16-17 Age Group,67,165,2024-06-23,The 2024 Nike National Youth Championships powered by Rogue
+1033037,ezekiel,tolentino (He/him/his/himself),California,2008,Marin Heavy Athletics,Male,Men's 16-17 Age Group,67,152,2024-06-23,The 2024 Nike National Youth Championships powered by Rogue
+1053843,James-David,Dendy (He/him/his/himself),Tennessee,2007,It's Light Weightlifting,Male,Men's 16-17 Age Group,73,210,2024-06-23,The 2024 Nike National Youth Championships powered by Rogue
+1072703,Jesus,Nuñez,Texas,2008,Bull Strength Barbell,Male,Men's 16-17 Age Group,73,190,2024-06-23,The 2024 Nike National Youth Championships powered by Rogue
 1057292,William,Love (He/him/his/himself),New Mexico,2007,4K Weightlifting,Male,Men's 16-17 Age Group,73,160,2024-06-23,The 2024 Nike National Youth Championships powered by Rogue
 1074987,Luke,Twardy,Florida,2007,Unaffiliated,Male,Men's 16-17 Age Group,81,250,2024-06-23,The 2024 Nike National Youth Championships powered by Rogue
 1066370,James,Thomas (He/him/his/himself),South Carolina,2007,Team Divergent,Male,Men's 16-17 Age Group,81,190,2024-06-23,The 2024 Nike National Youth Championships powered by Rogue
