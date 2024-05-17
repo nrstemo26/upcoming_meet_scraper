@@ -90,7 +90,9 @@ function formatMeetTitle(data:string|null):string{
 }
 
 async function getMaxResultsPerPage(page: playwright.Page, ) {
-    // .v-select__slot .v-select__selections
+    await page.locator('.v-select__slot .v-select__selections .v-select__selection.v-select__selection--comma').click();
+    await page.waitForSelector('.v-menu__content.menuable__content__active');
+    await page.locator('.v-list-item__content .v-list-item__title').locator('text=50').click(); 
 }
 
 
@@ -213,7 +215,7 @@ async function scrapeMeet(csvPath:string, url:string, date:Date){
     try{
         
     const browser = await playwright.chromium.launch({
-        headless: true,//setting to true will not run the ui
+        headless: false,//setting to true will not run the ui
     })
     const page = await browser.newPage();
     await page.goto(url);
@@ -222,6 +224,7 @@ async function scrapeMeet(csvPath:string, url:string, date:Date){
     await progressLocator.waitFor({state:'detached'})
     
     await page.waitForTimeout(3000)
+    await getMaxResultsPerPage(page);
 
     let meetTitle = formatMeetTitle(await page.locator('.v-card__title').first().getByRole('heading').innerText());
 
@@ -264,9 +267,6 @@ async function scrapeMeet(csvPath:string, url:string, date:Date){
             await page.locator('.mdi-chevron-right').click();
         }
     }
-
-  
-        
 
         await browser.close();
 
@@ -412,7 +412,7 @@ async function retry(maxRetries: number, tryFn:any) {
 
 
 
-run();
+// run();
 // scrapeMeet('meet.csv','https://usaweightlifting.sport80.com/public/events/12701/entries/19125?bl=locator',new Date('1-24-2029'))
 
 
