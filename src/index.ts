@@ -89,6 +89,11 @@ function formatMeetTitle(data:string|null):string{
     }
 }
 
+async function getMaxResultsPerPage(page: playwright.Page, ) {
+    // .v-select__slot .v-select__selections
+}
+
+
 async function readCsv(filePath:string):Promise<UpcomingMeet[]> {
     const readFileAsync = promisify(fs.readFile);
 
@@ -136,6 +141,17 @@ async function fileExists(path:string): Promise<Boolean>{
     }
 }
 
+function parsePagination(paginationText: string | null): {end: number, total: number} {
+    if (!paginationText) {
+        return { end: 0, total: 0 };
+    }
+    // Assuming paginationText is in the format "1-20 of X"
+    const [range, , total] = paginationText.split(' ');
+    const [start, end] = range.split('-').map(Number);
+    return { end, total: Number(total) };
+}
+
+
 
 async function scrapeMetaAndSpecific(){
     let meetsArray:UpcomingMeet[] = [];
@@ -155,6 +171,7 @@ async function scrapeMetaAndSpecific(){
                 return {id: el, title: el}
             })
     
+
             await writeResults(meetMetaPath, meetsHeader, meetsArray);
         }catch(e){
             //error while getting data or writing
@@ -204,43 +221,64 @@ async function scrapeMeet(csvPath:string, url:string, date:Date){
     let progressLocator = page.getByRole("progressbar")
     await progressLocator.waitFor({state:'detached'})
     
-    await page.waitForTimeout(5000)
+    await page.waitForTimeout(3000)
 
     let meetTitle = formatMeetTitle(await page.locator('.v-card__title').first().getByRole('heading').innerText());
 
     console.log('scraping meet: ', meetTitle)
 
-    // let headers = await page.getByRole('columnheader').allTextContents()
- 
-    let athleteLocator = page.locator('tbody tr')
-    let athletes = await athleteLocator.allInnerTexts() 
-    let totalAthleteCount = await athleteLocator.count() 
 
     let resultsString = await page.getByRole('heading', { name: 'Records' }).innerText()
     let resultsCount = parseInt(resultsString.trim().split(' Records')[0])
-    // let resultsCount = parseInt(resultsString.trim().split(' Records')[0])
+    console.log('total results to scrape: ', resultsCount)
 
     let athleteData: AthleteEntry[] = [];
 
-    if(resultsCount === 0 ){
-        console.log('done scraping... no entries')
-        return;
-    }else{
-        for(let i=0; i< totalAthleteCount; i++){
-            let currentAthlete = formatAthleteData(athletes[i])
+    let end = 0;
+
+    while(end != resultsCount){
+       
+        let pagination = parsePagination(await page.locator('.v-data-footer__pagination').textContent());
+        end = pagination.end;
+        console.log(end)
+        
+        console.log(`scraping athlete ${end} of ${resultsCount}`)
+        
+        await page.waitForTimeout(2000)
+        let athleteLocator = page.locator('tbody tr')
+        let currentPageAthletes = await athleteLocator.allInnerTexts();
+        let currentPageAthleteCount = await athleteLocator.count();
+        console.log('athletes on page: ', currentPageAthleteCount)
+        await page.waitForTimeout(2000)
+
+        for(let i=0; i< currentPageAthleteCount; i++){
+            let currentAthlete = formatAthleteData(currentPageAthletes[i])
             let athleteObj: AthleteEntry = athleteArrayToObj(currentAthlete, date, meetTitle);
             athleteData.push(athleteObj)
         }
-        
-        await browser.close();
-        
-        const csvHeader = Object.keys(athleteData[0]).map(el=>{
-            return {'id': el, 'title': el}
-        })
-        
-        await writeResults(csvPath, csvHeader, athleteData)
-        
+
+
+        if(end === resultsCount){
+            break;
+        }else{
+            await page.locator('.mdi-chevron-right').click();
+        }
     }
+
+  
+        
+
+        await browser.close();
+
+        if(resultsCount === 0 ){
+            console.log('done scraping... no entries')
+            return;
+        }else{
+            const csvHeader = Object.keys(athleteData[0]).map(el=>{
+                return {'id': el, 'title': el}
+            })
+            await writeResults(csvPath, csvHeader, athleteData)
+        }    
     
     }catch(e){
         console.log('error scraping', e)   
@@ -375,6 +413,7 @@ async function retry(maxRetries: number, tryFn:any) {
 
 
 run();
+// scrapeMeet('meet.csv','https://usaweightlifting.sport80.com/public/events/12701/entries/19125?bl=locator',new Date('1-24-2029'))
 
 
 
