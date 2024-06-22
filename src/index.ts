@@ -6,14 +6,14 @@ import { promisify } from 'util';
 
 let allMeetTypes:string[] = [];
 
-interface UpcomingMeet{
+export interface UpcomingMeet{
     path: string,
     url: string,
     name: string,
     date: Date,
 }
 
-interface AthleteEntry{
+export interface AthleteEntry{
     member_id: number|string,
     first_name: string,
     last_name: string,
@@ -155,10 +155,10 @@ function parsePagination(paginationText: string | null): {end: number, total: nu
 
 
 
-async function scrapeMetaAndSpecific(){
+export async function scrapeMetaAndSpecific(path: string = './data/'){
     let meetsArray:UpcomingMeet[] = [];
 
-    let meetMetaPath:string = './data/national_meets_meta.csv'; 
+    let meetMetaPath:string = path + 'national_meets_meta.csv'; 
 
     if(await fileExists(meetMetaPath)){
         console.log('meta file already exists')
@@ -167,7 +167,7 @@ async function scrapeMetaAndSpecific(){
     }else{
         try{
             console.log('meta file does not exists')
-            meetsArray = await scrapeUpcomingMeta();
+            meetsArray = await scrapeUpcomingMeta(path+'data/');
     
             let meetsHeader = Object.keys(meetsArray[0]).map(el=>{
                 return {id: el, title: el}
@@ -204,18 +204,20 @@ async function scrapeMetaAndSpecific(){
     return true;
 }
 
-async function run(){
+export async function run(retries: number, path:string){
     // await scrapeMeet('./foo.csv','https://usaweightlifting.sport80.com/public/events/12701/entries/19125?bl=locator', new Date('1/1/2023'))
-    await retry(5,scrapeMetaAndSpecific);
+    await fs.promises.mkdir(path, { recursive: true });
+    await fs.promises.mkdir(path+ 'data/', { recursive: true })
+    await retry(retries,scrapeMetaAndSpecific, path);
 }
 
 
 // npx playwright codegen https://usaweightlifting.sport80.com/public/events/12701/entries/19125?bl=locator
-async function scrapeMeet(csvPath:string, url:string, date:Date){
+export async function scrapeMeet(csvPath:string, url:string, date:Date){
     try{
         
     const browser = await playwright.chromium.launch({
-        headless: false,//setting to true will not run the ui
+        headless: true,//setting to true will not run the ui
     })
     const page = await browser.newPage();
     await page.goto(url);
@@ -233,7 +235,7 @@ async function scrapeMeet(csvPath:string, url:string, date:Date){
 
     let resultsString = await page.getByRole('heading', { name: 'Records' }).innerText()
     let resultsCount = parseInt(resultsString.trim().split(' Records')[0])
-    console.log('total results to scrape: ', resultsCount)
+    // console.log('total results to scrape: ', resultsCount)
 
     let athleteData: AthleteEntry[] = [];
 
@@ -243,15 +245,15 @@ async function scrapeMeet(csvPath:string, url:string, date:Date){
        
         let pagination = parsePagination(await page.locator('.v-data-footer__pagination').textContent());
         end = pagination.end;
-        console.log(end)
+        // console.log(end)
         
-        console.log(`scraping athlete ${end} of ${resultsCount}`)
+        // console.log(`scraping athlete ${end} of ${resultsCount}`)
         
         await page.waitForTimeout(2000)
         let athleteLocator = page.locator('tbody tr')
         let currentPageAthletes = await athleteLocator.allInnerTexts();
         let currentPageAthleteCount = await athleteLocator.count();
-        console.log('athletes on page: ', currentPageAthleteCount)
+        // console.log('athletes on page: ', currentPageAthleteCount)
         await page.waitForTimeout(2000)
 
         for(let i=0; i< currentPageAthleteCount; i++){
@@ -320,15 +322,15 @@ function cleanDate(str:string|null): Date{
     }
 }
 
-function createPath(str:string|null):string{
+ function createPath(str:string|null,path:string):string{
     if(str){
         let processedString = str.trim().replace(/[-,]/g, '').toLowerCase();
-        return './data/' + processedString.replace(/\s+/g, '_') + '.csv'
+        return path + processedString.replace(/\s+/g, '_') + '.csv'
     }
     return 'foo.csv'
 }
 
-async function scrapeUpcomingMeta(): Promise<UpcomingMeet[]>{
+export async function scrapeUpcomingMeta(path:string): Promise<UpcomingMeet[]>{
     let nationalMeets:UpcomingMeet[] = [];
     const browser = await playwright.chromium.launch({
         headless: true,
@@ -373,7 +375,7 @@ async function scrapeUpcomingMeta(): Promise<UpcomingMeet[]>{
                     url: page1.url(),
                     name: name? name: 'error',
                     date,
-                    path: createPath(name)
+                    path: createPath(name, path)
                 })
                
             }      
@@ -391,12 +393,12 @@ async function scrapeUpcomingMeta(): Promise<UpcomingMeet[]>{
 }
 
 
-async function retry(maxRetries: number, tryFn:any) { 
+export async function retry(maxRetries: number, tryFn:any, path:string) { 
     let retries:number = 0;
     while(retries < maxRetries){
         try{
             console.log('retries: ', retries)
-            let done = await tryFn();
+            let done = await tryFn(path);
             if(done) break;
         }catch(e){
             console.log('there was an error. now retrying')
@@ -411,18 +413,7 @@ async function retry(maxRetries: number, tryFn:any) {
 }   
 
 
-
-// run();
-// scrapeMeet('meet.csv','https://usaweightlifting.sport80.com/public/events/12701/entries/19125?bl=locator',new Date('1-24-2029'))
+// run(5, './upcoming_entries/');
 
 
 
-//hardcoded meet data
-//   //likely get these meets from somewhere else... via scraping or something
-//   let meetsArray = [
-//     {
-//         path: 'foo.csv',
-//         url:'https://usaweightlifting.sport80.com/public/events/12701/entries/19125?bl=locator',
-//         date: new Date('June 23, 2023')
-//     },
-// ] 
