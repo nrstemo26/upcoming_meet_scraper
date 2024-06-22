@@ -1,8 +1,9 @@
 {
   "name": "upcoming_meet_scraper",
   "version": "1.0.0",
+  "type": "commonjs",
   "description": "scraper for upcoming meets from usaw",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
     "run": "node ./dist/index.js",
