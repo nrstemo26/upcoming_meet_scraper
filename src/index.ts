@@ -158,7 +158,8 @@ function parsePagination(paginationText: string | null): {end: number, total: nu
 export async function scrapeMetaAndSpecific(path: string = './data/'){
     let meetsArray:UpcomingMeet[] = [];
 
-    let meetMetaPath:string = path + 'national_meets_meta.csv'; 
+    // let meetMetaPath:string = path + 'national_meets_meta.csv'; 
+    let meetMetaPath:string = './7-9-upcoming_entries/national_meets_meta.csv'; 
 
     if(await fileExists(meetMetaPath)){
         console.log('meta file already exists')
@@ -215,7 +216,6 @@ export async function run(retries: number, path:string){
 // npx playwright codegen https://usaweightlifting.sport80.com/public/events/12701/entries/19125?bl=locator
 export async function scrapeMeet(csvPath:string, url:string, date:Date){
     try{
-        
     const browser = await playwright.chromium.launch({
         headless: true,//setting to true will not run the ui
     })
@@ -225,8 +225,13 @@ export async function scrapeMeet(csvPath:string, url:string, date:Date){
     let progressLocator = page.getByRole("progressbar")
     await progressLocator.waitFor({state:'detached'})
     
-    await page.waitForTimeout(3000)
-    await getMaxResultsPerPage(page);
+    await page.waitForTimeout(5000)
+    await page.locator('.v-select__slot .v-select__selections .v-select__selection.v-select__selection--comma').click();
+    await page.waitForSelector('.v-menu__content.menuable__content__active');
+    await page.locator('.v-list-item__content .v-list-item__title').locator('text=50').click(); 
+    await page.waitForTimeout(5000)
+
+
 
     let meetTitle = formatMeetTitle(await page.locator('.v-card__title').first().getByRole('heading').innerText());
 
@@ -267,11 +272,12 @@ export async function scrapeMeet(csvPath:string, url:string, date:Date){
             break;
         }else{
             await page.locator('.mdi-chevron-right').click();
+            await page.waitForTimeout(2000)
         }
     }
 
         await browser.close();
-
+        // console.log(athleteData.length)
         if(resultsCount === 0 ){
             console.log('done scraping... no entries')
             return;
@@ -413,7 +419,7 @@ export async function retry(maxRetries: number, tryFn:any, path:string) {
 }   
 
 
-// run(5, './upcoming_entries/');
+//  run(5, './7-9-upcoming_entries/');
 
 
 
